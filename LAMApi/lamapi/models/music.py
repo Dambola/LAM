@@ -12,20 +12,22 @@ class MusicModel:
         self.type2 = type2
         self.type3 = type3
 
-    def update(self, database):
+    def select(self, database):
         if not self.id:
             return False
         
-        SQL =  'UPDATE `%s`\n' % (MusicModel.tablename)
-        SQL += 'SET\n'
-        SQL += '`name` = \'%s\',\n' % (self.name)
-        SQL += '`author` = %d,\n' % (self.author)
-        SQL += '`type1` = %d,\n' % (self.type1)
-        SQL += '`type2` = %d,\n' % (self.type2)
-        SQL += '`type3` = %d\n' % (self.type3)
-        SQL += 'WHERE `id` = %s\n' % (self.id)
+        SQL =  'SELECT `%s`\n' % ('`, `'.join(MusicModel.columns))
+        SQL += 'FROM `%s`\n' % (MusicModel.tablename)
+        SQL += 'WHERE `id` = %d\n' % (self.id)
 
-        database.execute(SQL)
+        row = database.select_one(SQL)
+        if not row:
+            return False
+        self.name = row['name']
+        self.author = row['author']
+        self.type1 = row['type1']
+        self.type2 = row['type2']
+        self.type3 = row['type3']
         return True
 
     def insert(self, database):
@@ -44,7 +46,34 @@ class MusicModel:
             return False
         self.id = new_id
         return True
-    
+
+    def update(self, database):
+        if not self.id:
+            return False
+        
+        SQL =  'UPDATE `%s`\n' % (MusicModel.tablename)
+        SQL += 'SET\n'
+        SQL += '`name` = \'%s\',\n' % (self.name)
+        SQL += '`author` = %d,\n' % (self.author)
+        SQL += '`type1` = %d,\n' % (self.type1)
+        SQL += '`type2` = %d,\n' % (self.type2)
+        SQL += '`type3` = %d\n' % (self.type3)
+        SQL += 'WHERE `id` = %s\n' % (self.id)
+
+        database.execute(SQL)
+        return True
+
+    def delete(self, database):
+        if not self.id:
+            return False
+
+        SQL =  'DELETE\n'
+        SQL += 'FROM `%s`\n' % (MusicModel.tablename)
+        SQL += 'WHERE `id` = %d\n' % (self.id)
+
+        database.execute(SQL)
+        return True
+        
     def as_json(self):
         return {
             'id'     : self.id,
@@ -82,9 +111,20 @@ class MusicModel:
     def createTable(self, database):
         database.execute(MUSIC_SQL_TABLE_CREATE)
 
+    @classmethod
+    def checkTable(self, database):
+        pass
+
     def __str__(self):
         return 'Music(%s,%s,%s,%s,%s)' % \
             (self.name,self.author,self.type1,self.type2,self.type3)
 
     def __repr__(self):
         return '<Music %r>' % (self.name)
+
+
+''' 
+TO-DO:
+-   Create classmethod createTable for MusicModel
+-   Create classmethod checkTable for MusicModel
+'''

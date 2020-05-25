@@ -2,8 +2,8 @@ from lamapi.controllers import *
 from lamapi import api, app, db
 from lamapi.models.music import MusicModel
 
-api.add_resource(MusicList, '/music')
-api.add_resource(Music, '/music/<int:id>')
+api.add_resource(MusicGeneralController, '/music')
+api.add_resource(MusicController, '/music/<int:id>')
 
 
 if __name__ == '__main__':

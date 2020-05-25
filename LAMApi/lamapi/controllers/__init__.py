@@ -1,1 +1,1 @@
-from .music import Music, MusicList
+from lamapi.controllers.music import MusicController, MusicGeneralController
