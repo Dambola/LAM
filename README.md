@@ -5,13 +5,13 @@
 - [X] Rename Music Resource to MusicController
 - [X] Create method select for MusicModel (by id)
 - [X] Create method delete for MusicModel (by id)
-- [X] Create method createTable for MusicModel
-- [ ] Create method checkTable for MusicModel
-- [ ] Create the MusicGeneralController 'Get' Resource for get Musics (missing limit pagination)
-- [ ] Create the MusicGeneralController 'Put' Resource for Creating new Musics
-- [ ] Create the MusicController 'Get' Resource to get a Specific music from /music/id
-- [ ] Create the MusicController 'Post' Resource to update a Specific music from /music/id
-- [ ] Create the MusicController 'Delete' Resource to delete a Specific music from /music/id
+- [X] Create classmethod createTable for MusicModel
+- [X] Create classmethod checkTable for MusicModel
+- [ ] Create the MusicGeneralController 'Get'    Resource for get Musics (missing limit pagination)
+- [ ] Create the MusicGeneralController 'Put'    Resource for Creating new Musics
+- [ ] Create the MusicController        'Get'    Resource to get a Specific music from /music/id
+- [ ] Create the MusicController        'Post'   Resource to update a Specific music from /music/id
+- [ ] Create the MusicController        'Delete' Resource to delete a Specific music from /music/id
 - [ ] Make code documentation for MusicModel
 - [ ] Make code documentation for MusicController
 - [ ] Make code documentation for MusicGeneralController

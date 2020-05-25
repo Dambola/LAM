@@ -1,8 +1,10 @@
-from lamapi.models.sql import MUSIC_SQL_TABLE_CREATE
+from lamapi.models.sql import MUSIC_SQL_TABLE_CREATE, MUSIC_SQL_TABLE_COLUMNS
+from lamapi.config import DATABASE_SCHEMA
 
 class MusicModel:
     tablename = 'music'
     columns = ['id','name','author','type1','type2','type3']
+    columnsTypes = ['int','varchar','int','int','int','int']
 
     def __init__(self, name, author, type1, type2=None, type3=None, id=None):
         self.id = id
@@ -109,11 +111,24 @@ class MusicModel:
 
     @classmethod
     def createTable(self, database):
+        database.execute("drop table %s" % self.tablename)
         database.execute(MUSIC_SQL_TABLE_CREATE)
 
     @classmethod
     def checkTable(self, database):
-        pass
+        colInfo = { key:value for key, value in zip(MusicModel.columns,MusicModel.columnsTypes) }
+        rows = database.select(MUSIC_SQL_TABLE_COLUMNS,DATABASE_SCHEMA)
+        cnt = 0
+        for row in rows:
+            column_name = row['COLUMN_NAME']
+            column_type = row['DATA_TYPE']
+            if column_name not in colInfo or \
+                colInfo[column_name] != column_type:
+                return False
+            cnt += 1
+        if len(colInfo) != cnt:
+            return False
+        return True
 
     def __str__(self):
         return 'Music(%s,%s,%s,%s,%s)' % \
@@ -121,10 +136,3 @@ class MusicModel:
 
     def __repr__(self):
         return '<Music %r>' % (self.name)
-
-
-''' 
-TO-DO:
--   Create classmethod createTable for MusicModel
--   Create classmethod checkTable for MusicModel
-'''
