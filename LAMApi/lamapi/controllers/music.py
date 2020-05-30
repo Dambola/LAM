@@ -7,7 +7,8 @@ class MusicGeneralController(Resource):
     def get(self):
         page = request.args.get('page','1')
         orderby = request.args.get('orderby','name')
-
+        
+        
         db.connect()
         musics = MusicModel.query(db)
         authorsIds = set()

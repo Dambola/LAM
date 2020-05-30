@@ -87,16 +87,13 @@ class MusicModel:
         }
         
     @classmethod
-    def query(self, database, where=None, orderby=None):
-        if isinstance(where, list):
-            where = ' AND '.join(where)
-        if isinstance(orderby, list):
-            orderby = ', '.join(orderby)
+    def query(self, database, where=None, orderby=None, limit=None):
 
         SQL =  'SELECT `%s`\n' % ('`, `'.join(MusicModel.columns))
         SQL += 'FROM `%s`\n' % (MusicModel.tablename)
         SQL += 'WHERE %s\n' % where if where else ''
         SQL += 'ORDER BY %s\n' % orderby if orderby else ''
+        SQL += 'LIMIT %s\n' % limit if limit else ''
 
         return [
             MusicModel(
