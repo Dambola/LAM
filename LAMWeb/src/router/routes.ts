@@ -12,7 +12,7 @@ const routes: RouteConfig[] = [
         path: '/indicacao', component: () => import('pages/Indication.vue')
       },
       { 
-        path: '/musica', component: () => import('pages/Music.vue')
+        path: '/musica', component: () => import('pages/MusicPage.vue')
       },
       { 
         path: '/relatorio', component: () => import('pages/Report.vue')

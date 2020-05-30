@@ -62,12 +62,22 @@ module.exports = configure(function (/* ctx */) {
         'QTabs',
         'QTab',
         'QRouteTab',
-        'QPagination'
+        'QPagination',
+        'QDialog',
+        'QCard',
+        'QCardSection',
+        'QCardActions',
+        'QSpace',
+        'QSelect'
       ],
-      directives: [],
+      directives: [
+        'ClosePopup'
+      ],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Dialog'
+      ]
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
