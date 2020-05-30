@@ -33,7 +33,7 @@ const state = {
       type3: null
     }
   }
-}
+};
 
 // Contains not assynchronous -> Change state directly
 const mutations = {
@@ -46,7 +46,7 @@ const mutations = {
   createMusic(state, payload) {
     Vue.set(state.musics, payload.id, payload.music)
   }
-}
+};
 
 // Methods Assynchronous (Commits Mutations)
 const actions = {
@@ -64,14 +64,14 @@ const actions = {
     }
     commit('createMusic', payload)
   }
-}
+};
 
 // Get data from a State
 const getters = {
   musics: (state) => {
     return state.musics
   }
-}
+};
 
 export default {
   namespaced: true,
