@@ -1,5 +1,5 @@
 <template>
-  <tr @click="updateMusic({ id: id, updates: { name : 'CLICADO!' } })">
+  <tr @click="openDetailMusic">
     <td class="text-left">
       <div class="text-subtitle1"><strong>{{ music.name }}</strong></div>
       <small>{{ music.author }}</small>
@@ -33,6 +33,9 @@
         }).onOk(() => {
           this.deleteMusic(id)
         })
+      },
+      openDetailMusic () {
+        this.$emit('openDetailMusic',this.id)
       }
     }
   }

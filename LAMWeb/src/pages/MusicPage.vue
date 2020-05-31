@@ -10,7 +10,9 @@
           <th class="text-left">
             Música
           </th>
-          <th class="text-right">Típos</th>
+          <th class="text-right">
+            Típos
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -19,6 +21,7 @@
           :key="key"
           :music="music"
           :id="key"
+          @openDetailMusic="openDetailMusic"
         >
         </music>
       </tbody>
@@ -30,13 +33,19 @@
         icon="add"
         color="primary"
         size="20px"
-        @click.stop="showAddTask = true"
+        @click.stop="showAddMusic = true"
         dense 
       />
     </div>
 
-    <q-dialog v-model="showAddTask">
-      <add-music @close="showAddTask = false"/>
+    <q-dialog v-model="showAddMusic">
+      <add-music @close="showAddMusic = false"/>
+    </q-dialog>
+
+    <q-dialog v-model="showDetailMusic" :full-width="true">
+      <detail-music 
+        :music="detailedMusic"
+      />
     </q-dialog>
   </q-page>
 </template>
@@ -51,14 +60,21 @@
     },
     components: {
       'music' : require('components/Musics/Music.vue').default,
-      'add-music' : require('components/Musics/AddMusic.vue').default
+      'add-music' : require('components/Musics/AddMusic.vue').default,
+      'detail-music' : require('components/Musics/DetailMusic.vue').default
     },
     data () {
       return {
-        showAddTask: false
+        showAddMusic: false,
+        showDetailMusic: false,
+        detailedMusic: null
       }
     },
     methods : {
+      openDetailMusic (index) {
+        this.detailedMusic = this.musics[index];
+        this.showDetailMusic = true;
+      }
     }
   }
 </script>

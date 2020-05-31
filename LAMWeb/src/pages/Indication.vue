@@ -19,14 +19,14 @@
 </template>
 
 <script>
-export default {
-  name: 'Configurações',
-  components: {},
-  data() {
-    return {};
-  },
-  methods : {}
-}
+  export default {
+    name: 'Configurações',
+    components: {},
+    data() {
+      return {};
+    },
+    methods : {}
+  }
 </script>
 
 <style lang="scss">

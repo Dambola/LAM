@@ -65,7 +65,8 @@ module.exports = function (/* ctx */) {
         'QCardSection',
         'QCardActions',
         'QSpace',
-        'QSelect'
+        'QSelect',
+        'QSeparator'
       ],
       directives: [
         'ClosePopup'

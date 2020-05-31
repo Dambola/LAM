@@ -37,26 +37,26 @@ const state = {
 
 // Contains not assynchronous -> Change state directly
 const mutations = {
-  updateMusic(state, payload) {
+  updateMusic (state, payload) {
     Object.assign(state.musics[payload.id],payload.updates)
   },
-  deleteMusic(state, id) { 
+  deleteMusic (state, id) { 
     Vue.delete(state.musics,id)
   },
-  createMusic(state, payload) {
+  createMusic (state, payload) {
     Vue.set(state.musics, payload.id, payload.music)
   }
 };
 
 // Methods Assynchronous (Commits Mutations)
 const actions = {
-  updateMusic({ commit }, payload) {
+  updateMusic ({ commit }, payload) {
     commit('updateMusic', payload)
   },
-  deleteMusic({ commit }, id) {
+  deleteMusic ({ commit }, id) {
     commit('deleteMusic', id)
   },
-  createMusic({ commit }, music) {
+  createMusic ({ commit }, music) {
     let musicId = uid()
     let payload = {
       id: musicId,
