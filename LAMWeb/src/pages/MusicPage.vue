@@ -44,7 +44,18 @@
 
     <q-dialog v-model="showDetailMusic" :full-width="true">
       <detail-music 
-        :music="detailedMusic"
+        :music="clickedMusic"
+        :id="clickedMusicID"
+        @openEditMusic="openEditMusic"
+        @close="showDetailMusic = false"
+      />
+    </q-dialog>
+
+    <q-dialog v-model="showEditMusic" :full-width="true">
+      <edit-music 
+        :music="clickedMusic"
+        :id="clickedMusicID"
+        @close="showEditMusic = false"
       />
     </q-dialog>
   </q-page>
@@ -61,19 +72,33 @@
     components: {
       'music' : require('components/Musics/Music.vue').default,
       'add-music' : require('components/Musics/AddMusic.vue').default,
-      'detail-music' : require('components/Musics/DetailMusic.vue').default
+      'detail-music' : require('components/Musics/DetailMusic.vue').default,
+      'edit-music' : require('components/Musics/EditMusic.vue').default
     },
     data () {
       return {
         showAddMusic: false,
         showDetailMusic: false,
-        detailedMusic: null
+        showEditMusic: false,
+        clickedMusicID: -1,
+        clickedMusic: null
       }
     },
     methods : {
       openDetailMusic (index) {
-        this.detailedMusic = this.musics[index];
+        this.clickedMusicID = index;
+        this.clickedMusic = this.musics[index];
+        this.showAddMusic = false;
+        this.showEditMusic = false;
         this.showDetailMusic = true;
+      },
+      openEditMusic (index) {
+        console.log('Teste: ' + index);
+        this.clickedMusicID = index;
+        this.clickedMusic = this.musics[index];
+        this.showAddMusic = false;
+        this.showDetailMusic = false;
+        this.showEditMusic = true;
       }
     }
   }

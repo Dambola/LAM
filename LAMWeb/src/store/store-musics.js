@@ -38,38 +38,38 @@ const state = {
 // Contains not assynchronous -> Change state directly
 const mutations = {
   updateMusic (state, payload) {
-    Object.assign(state.musics[payload.id],payload.updates)
+    Object.assign(state.musics[payload.id],payload.updates);
   },
   deleteMusic (state, id) { 
-    Vue.delete(state.musics,id)
+    Vue.delete(state.musics,id);
   },
   createMusic (state, payload) {
-    Vue.set(state.musics, payload.id, payload.music)
+    Vue.set(state.musics, payload.id, payload.music);
   }
 };
 
 // Methods Assynchronous (Commits Mutations)
 const actions = {
   updateMusic ({ commit }, payload) {
-    commit('updateMusic', payload)
+    commit('updateMusic', payload);
   },
   deleteMusic ({ commit }, id) {
-    commit('deleteMusic', id)
+    commit('deleteMusic', id);
   },
   createMusic ({ commit }, music) {
-    let musicId = uid()
+    let musicId = uid();
     let payload = {
       id: musicId,
       music: music
-    }
-    commit('createMusic', payload)
+    };
+    commit('createMusic', payload);
   }
 };
 
 // Get data from a State
 const getters = {
   musics: (state) => {
-    return state.musics
+    return state.musics;
   }
 };
 
@@ -79,4 +79,4 @@ export default {
   mutations,
   actions,
   getters
-}
+};

@@ -1,9 +1,14 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from lamapi.db import DatabaseManager
-from lamapi.config import DATABASE_HOST, \
-    DATABASE_USER, DATABASE_PASSWORD, DATABASE_SCHEMA
+# from lamapi.db import DatabaseManager
+from lamapi.config import LAMConfiguration
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config.from_object('lamapi.config.LAMConfiguration')
 api = Api(app)
-db = DatabaseManager(DATABASE_HOST, DATABASE_USER, password=DATABASE_PASSWORD, db=DATABASE_SCHEMA)
+db = SQLAlchemy(app)
+
+@app.before_first_request
+def create_tables():
+    db.create_all()

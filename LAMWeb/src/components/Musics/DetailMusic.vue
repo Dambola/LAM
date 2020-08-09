@@ -1,5 +1,7 @@
 <template>
   <q-card>
+
+    <!-- Music Header -->
     <q-card-section class="row">
       <div class="text-h6">Música</div>
       <q-space />
@@ -11,6 +13,8 @@
         icon="close"
       />
     </q-card-section>
+
+    <!-- Music Session -->
     <q-card-section class="q-pt-none">
       <div class="row">
         <div class="col q-mr-sm">
@@ -30,30 +34,67 @@
           </div>
         </div>
       </div>
+
+      <!-- Type Session -->
       <div class="row q-mt-sm">
         <div class="col">
           <div class="row">
             <div class="col"><span class="text-subtitle2">Tipo:</span></div>
           </div>
-          <div class="row">
-            <div class="col text-center"><small>{{ music.type1 ? music.type1 : '-' }}</small></div>
-            <div class="col text-center"><small>{{ music.type2 ? music.type2 : '-' }}</small></div>
-            <div class="col text-center"><small>{{ music.type3 ? music.type3 : '-' }}</small></div>
+          <div class="row text-center">
+            <div class="col"><small>{{ music.type1 ? music.type1 : '-' }}</small></div>
+            <div class="col"><small>{{ music.type2 ? music.type2 : '-' }}</small></div>
+            <div class="col"><small>{{ music.type3 ? music.type3 : '-' }}</small></div>
           </div>
         </div>
       </div>
+
+      <!-- Actions Session -->
+      <div class="row text-center q-pt-lg">
+        <div class="col">
+          <q-btn 
+            icon="fas fa-trash-alt" 
+            size="sm" 
+            class="q-mx-md text-white bg-red-6" 
+            @click="deleteThisMusic"
+          />
+          <q-btn 
+            icon="fas fa-edit" 
+            size="sm" 
+            class="q-mx-md text-white bg-yellow-6" 
+            @click="openEditMusic"
+          />
+          <q-btn 
+            icon="fas fa-external-link-square-alt" 
+            size="sm" 
+            class="q-mx-md text-white bg-green-13" 
+          />
+        </div>
+      </div>
+
     </q-card-section>
   </q-card>
 </template>
 
 <script>
+  import { mapActions } from 'vuex';
+
   export default {
     data () {
       return {}
     },
-    methods: {},
-    props: ['music']
-  }
+    methods: {
+      ...mapActions('musics',['deleteMusic']),
+      openEditMusic () {
+        this.$emit('openEditMusic',this.id);
+      },
+      deleteThisMusic () {
+        this.deleteMusic(this.id);
+        this.$emit('close');
+      }
+    },
+    props: ['music','id']
+  };
 </script>
 
 <style lang="scss">

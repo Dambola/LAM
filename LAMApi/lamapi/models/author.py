@@ -8,7 +8,7 @@ class AuthorModel:
         self.id = id
         self.name = name
 
-    def update(self, database):
+    def update(self, connection):
         if not self.id:
             return False
         
@@ -17,10 +17,10 @@ class AuthorModel:
         SQL += '`name` = \'%s\',\n' % (self.name)
         SQL += 'WHERE `id` = %s\n' % (self.id)
 
-        database.execute(SQL)
+        connection.execute(SQL)
         return True
 
-    def insert(self, database):
+    def insert(self, connection):
         if self.id:
             return False
         
@@ -29,8 +29,8 @@ class AuthorModel:
         SQL += 'VALUES\n'
         SQL += '(\'%s\')\n' % (self.name)
 
-        database.execute(SQL)
-        new_id = database.insert_id()
+        connection.execute(SQL)
+        new_id = connection.insert_id()
 
         if not new_id or new_id <= 0:
             return False
@@ -44,7 +44,7 @@ class AuthorModel:
         }
         
     @classmethod
-    def query(self, database, where=None, orderby=None):
+    def query(self, connection, where=None, orderby=None):
         if isinstance(where, list):
             where = ' AND '.join(where)
         if isinstance(orderby, list):
@@ -59,12 +59,12 @@ class AuthorModel:
             AuthorModel(
                 row['name'],
                 id=row['id']
-            ) for row in database.select(SQL)
+            ) for row in connection.select(SQL)
         ]
 
     @classmethod
-    def createTable(self, database):
-        database.execute(AUTHOR_SQL_TABLE_CREATE)
+    def createTable(self, connection):
+        connection.execute(AUTHOR_SQL_TABLE_CREATE)
 
     def __str__(self):
         return 'Type(%s)' % (self.name)
