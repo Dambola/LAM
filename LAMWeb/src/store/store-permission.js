@@ -1,11 +1,13 @@
 import Vue from 'vue'
-import { axiosInstance } from '../boot/axios'
+import axios from 'axios'
 import authHeader from '../services/header-auth'
 import { uid } from 'quasar'
 
+const API_URL = 'http://localhost:8081/music';
+
 // The data goes here
 const state = {
-  musics: {}
+  permission: {}
 };
 
 // Contains not assynchronous -> Change state directly
@@ -13,15 +15,12 @@ const mutations = {
   reloadMusics (state, musics) {
     state.musics = musics;
   },
-  
   updateMusic (state, payload) {
     Object.assign(state.musics[payload.id], payload.updates);
   },
-
   deleteMusic (state, id) { 
     Vue.delete(state.musics, id);
   },
-
   createMusic (state, payload) {
     Vue.set(state.musics, payload.id, payload.music);
   }
@@ -30,7 +29,7 @@ const mutations = {
 // Methods Assynchronous (Commits Mutations)
 const actions = {
   reloadMusics ({ commit }) {
-    axiosInstance.get('music', { headers: authHeader() }).then(response => {
+    axios.get(API_URL, { headers: authHeader() }).then(response => {
       if (response.data.musics) {
         commit('reloadMusics', response.data.musics);
       }

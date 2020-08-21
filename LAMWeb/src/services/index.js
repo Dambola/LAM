@@ -2,9 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 // import example from './module-example'
-import musics from './store-musics';
-import types from './store-types';
-import authors from './store-authors';
+import AuthService from './service-auth';
+import MusicService from './service-music';
 
 Vue.use(Vuex)
 
@@ -21,9 +20,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       // example
-      musics,
-      types,
-      authors
+      AuthService,
+      MusicService
     },
 
     // enable strict mode (adds overhead!)

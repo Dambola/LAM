@@ -7,7 +7,17 @@
     >
       <thead>
         <tr>
-          <th class="text-left">
+          <th class="text-left relative-position">
+            <q-btn 
+              round 
+              icon="add"
+              color="white"
+              text-color="primary"
+              class="absolute-center"
+              @click.stop="showAddMusic = true"
+              dense 
+              v-if="canAddMusic"
+            />
             Música
           </th>
           <th class="text-right">
@@ -26,17 +36,6 @@
         </music>
       </tbody>
     </q-markup-table>
-
-    <div class="absolute-bottom text-center q-mb-lg">
-      <q-btn 
-        round 
-        icon="add"
-        color="primary"
-        size="20px"
-        @click.stop="showAddMusic = true"
-        dense 
-      />
-    </div>
 
     <q-dialog v-model="showAddMusic">
       <add-music @close="showAddMusic = false"/>
@@ -62,12 +61,17 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'Músicas',
     computed: {
-      ...mapGetters('musics', ['musics'])
+      ...mapGetters('musics', ['musics']),
+      ...mapGetters('authors', ['authors']),
+      ...mapGetters('types', ['types']),
+      canAddMusic () {
+        return true;
+      }
     },
     components: {
       'music' : require('components/Musics/Music.vue').default,
@@ -99,7 +103,15 @@
         this.showAddMusic = false;
         this.showDetailMusic = false;
         this.showEditMusic = true;
-      }
+      },
+      ...mapActions('types', ['reloadTypes']),
+      ...mapActions('musics', ['reloadMusics']),
+      ...mapActions('authors', ['reloadAuthors']),
+    },
+    mounted () {
+      this.reloadTypes();
+      this.reloadAuthors();
+      this.reloadMusics();
     }
   }
 </script>

@@ -1,0 +1,96 @@
+<template>
+  <q-layout view="hHh Lpr lFf">
+    <q-header id="menu-header" elevated>
+      <q-toolbar id="menu-toolbar">
+        <!-- <q-btn flat @click="leftDrawerOpen = !leftDrawerOpen" round dense icon="menu" class="computer"/> -->
+        <q-toolbar-title class="text-center">
+          <img id="menu-logo" src="../assets/logobordered.png" class="vertical-middle">
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-header>
+
+    <!-------- Mobile Navegation Bar -------->
+    <q-footer elevated>
+      <q-tabs v-model="tab">
+        <q-tab
+          icon="fas fa-sign-in-alt"
+          name="login"
+          label="Login"
+          exact
+        />
+      </q-tabs>
+    </q-footer>
+
+    <!-------- Computer Navegation Bar -------->
+    <!-- <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+      content-class="bg-grey-1"
+      class="computer"
+    >
+      <q-list>
+        <q-item-label
+          header
+          class="text-grey-8"
+        >
+          Essential Links
+        </q-item-label>
+        <q-item
+          clickable
+          tag="a"
+          v-for="(item,index) in menuItems"
+          :key="index"
+          :to="item.link"
+          exact
+        >
+          <q-item-section
+            v-if="item.icon"
+            avatar
+          >
+            <q-icon :name="item.icon" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>{{ item.title }}</q-item-label>
+            <q-item-label caption>
+              {{ item.caption }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-drawer> -->
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
+</template>
+
+<script>
+export default {
+  name: 'MainLayout',
+  data () {
+    return {
+      tab : 'login'
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+  #menu-header {
+    #menu-toolbar {
+      height: 60px;
+      #menu-logo {
+        width: 90px; 
+        padding-right: 15px;
+        text-shadow: 1px 1px white;
+      }
+      #menu-text {
+        font-size: 25px;
+      }
+    }
+  }
+
+</style>

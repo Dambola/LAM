@@ -8,6 +8,14 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable = False)
     email = db.Column(db.String(120), unique = True, nullable = False)
     
-    def save_to_db(self):
+    def saveToDB(self):
         db.session.add(self)
         db.session.commit()
+    
+    def asJSON(self):
+        return {
+            'id'       : self.id,
+            'login'    : self.login,
+            'password' : self.password,
+            'email'    : self.email,
+        }

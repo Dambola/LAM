@@ -1,15 +1,15 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from lamapi.models import MusicModel
+from lamapi.models import AuthorModel
 from lamapi import db
 
-class MusicController(Resource):
+class AuthorController(Resource):
 
     # ---- TO-DO: Get Music
     def get(self):
-        musics = MusicModel.query.all()
-        if musics:
-            return { 'musics' : dict([ music.asJSON() for music in musics ]) }, 200 
+        authors = AuthorModel.query.all()
+        if authors:
+            return { 'authors' : dict([ author.asJSON() for author in authors ]) }, 200 
         return { 'message': 'Não foi possível achar músicas' }, 500
     
     # ---- TO-DO: Update Music

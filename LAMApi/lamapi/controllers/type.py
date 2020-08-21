@@ -1,15 +1,15 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from lamapi.models import MusicModel
+from lamapi.models import TypeModel
 from lamapi import db
 
-class MusicController(Resource):
+class TypeController(Resource):
 
     # ---- TO-DO: Get Music
     def get(self):
-        musics = MusicModel.query.all()
-        if musics:
-            return { 'musics' : dict([ music.asJSON() for music in musics ]) }, 200 
+        types = TypeModel.query.all()
+        if types:
+            return { 'types' : dict([ type.asJSON() for type in types ]) }, 200 
         return { 'message': 'Não foi possível achar músicas' }, 500
     
     # ---- TO-DO: Update Music
