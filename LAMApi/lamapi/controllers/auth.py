@@ -1,9 +1,12 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_restful.reqparse import RequestParser
+from flask_jwt_extended import create_access_token
+
 from lamapi import db
 from lamapi.models.user import UserModel
-from lamapi.auth import passwordEncrypt, getJWTToken
+from lamapi.auth import passwordEncrypt
+
 from sqlalchemy.exc import IntegrityError
 
 
@@ -21,9 +24,12 @@ post_user_parser.add_argument('password', help = 'Este campo é obrigatório', r
 
 
 class AuthController(Resource):
+    """TO-DO: Must create documentation here"""
 
     # ---- TO-DO: Post Auth
     def post(self):
+        """TO-DO: Must create documentation here"""
+
         data = post_user_parser.parse_args()
 
         login = data['login']
@@ -35,12 +41,14 @@ class AuthController(Resource):
             return {
                 'login' : user.login,
                 'email' : user.email,
-                'accessToken' : getJWTToken(user)
+                'access_token' : create_access_token(identity=user.login, headers={ 'email' : user.email })
             }
-        return { 'message': 'Login e/ou Senha não estão corretos.' }, 500
+        return { 'message': 'Login e/ou Senha não estão corretos.' }, 401
 
     # ---- TO-DO: Register a New User
     def put(self):
+        """TO-DO: Must create documentation here"""
+
         data = put_user_parser.parse_args()
 
         login = data['login']
@@ -51,7 +59,7 @@ class AuthController(Resource):
         try:
             new_user.saveToDB()
         except IntegrityError:
-            return { 'message': f'Login {login} ou/e Email {email} ja está sendo usado.'}, 500
+            return { 'message': f'Login {login} ou/e Email {email} ja está sendo usado.'}, 200
         except:
             return { 'message': 'Um erro aconteceu' }, 500
         return { 'message': f'User {login} was created' }
