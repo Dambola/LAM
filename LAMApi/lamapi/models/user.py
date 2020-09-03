@@ -7,7 +7,10 @@ class UserModel(db.Model):
     login = db.Column(db.String(120), unique = True, nullable = False)
     password = db.Column(db.String(120), nullable = False)
     email = db.Column(db.String(120), unique = True, nullable = False)
-    
+    name = db.Column(db.String(120))
+    smallname = db.Column(db.String(120))
+    birthdate = db.Column(db.Date())
+
     def saveToDB(self):
         db.session.add(self)
         db.session.commit()

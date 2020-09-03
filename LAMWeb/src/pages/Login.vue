@@ -13,14 +13,14 @@
         <q-input class="q-pt-sm" bg-color="white" outlined v-model="password" type="password" label="Password" />
       </div>
       <div id="welcome-home-icon">
-        <q-btn @click="doLogin()" color="white" text-color="primary" label="Entrar" />
+        <q-btn @click="submitLogin()" color="white" text-color="primary" label="Entrar" />
       </div>
     </div>
   </q-page>
 </template>
 
 <script>
-  import auth from '../services/service-auth';
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'Configurações',
@@ -32,11 +32,17 @@
       };
     },
     methods : {
-      doLogin () {
-        var loginDone = auth.login(this.username, this.password);
-        if (loginDone) {
-          this.$router.push(this.$route.query.redirect || '/');
-        }
+      ...mapActions('user', ['doLogin']),
+      submitLogin () {
+        console.log('submiting the login ' + this.password);
+        var loginDone = this.doLogin({ 
+          username: this.username, password: this.password 
+        }).then((can_redirect) => {
+          console.log('pode? '+can_redirect);
+          if (can_redirect) {
+            this.$router.push(this.$route.query.redirect || '/');
+          }
+        });
       }
     }
   }

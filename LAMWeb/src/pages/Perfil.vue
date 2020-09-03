@@ -1,18 +1,39 @@
 <template>
-  <q-page class="row items-center justify-evenly" padding>
-    <div id="welcome-home" class="text-center shadow-3 col-8">
-      <div id="welcome-home-title">
-        <span>
-          <strong>
-            Em construção!
-          </strong>
-        </span>
+  <q-page class="items-center justify-evenly" padding>
+    <div class="box perfil text-center absolute-full q-ma-sm p">
+      <div>
+        <q-avatar color="primary" text-color="white" size="120px">DN</q-avatar>
       </div>
-      <div id="welcome-home-text">
-        <small>Área de Perfil</small>
+      <div>
+        <p class="name">Daniel Nogueira Rebouças</p>
       </div>
-      <div id="welcome-home-icon">
-        <q-icon name="fas fa-exclamation-circle"></q-icon>
+      <div class="atributtes text-left">
+        <div class="attribute">
+          <span class="key">Apelido: </span>
+          <span class="value">Dambola</span>
+        </div>
+        <div class="attribute">
+          <span class="key">Email: </span>
+          <span class="value">danielnreboucas@hotmail.com</span>
+        </div>
+        <div class="attribute">
+          <span class="key">Data de Nascimento: </span>
+          <span class="value">12/10/1996</span>
+        </div>
+        <div class="attribute">
+          <span class="key">Data de Entrada: </span>
+          <span class="value">03/09/2015</span>
+        </div>
+        <div class="attribute">
+          <span class="key">Sexo: </span>
+          <span class="value">Masculino</span>
+        </div>
+        <div class="attribute">
+          <span class="key">Descrição:</span>
+        </div>
+        <div class="attribute">
+          <span class="value">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab pariatur, atque quod iste architecto, itaque dolore earum quos temporibus repellendus quam, cum reiciendis adipisci quasi accusantium voluptas aliquid eos sed!</span>
+        </div>
       </div>
     </div>
   </q-page>
@@ -30,19 +51,28 @@ export default {
 </script>
 
 <style lang="scss">
-#welcome-home {
-  background-color: $primary;
-  color: white;
-  padding: 20px 10px;
-  border-radius: 5px;
-  #welcome-home-title {
+.perfil {
+  margin: 15px;
+  padding: 5px;
+  background-color: white;
+  
+  .atributtes {
+    padding-top: 5px;
+    .attribute {
+      padding: 0px 20px;
+      span.key {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      span.value {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .name {
     font-size: 20px;
-  }
-  #welcome-home-text {
-  }
-  #welcome-home-icon {
-    padding-top: 1px;
-    font-size: 50px;
+    font-weight: 500;
   }
 }
 </style>

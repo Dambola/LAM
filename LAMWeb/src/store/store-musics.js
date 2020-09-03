@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import { axiosInstance } from '../boot/axios'
-import authHeader from '../services/header-auth'
+import { axios_lam } from '../boot/axios'
 import { uid } from 'quasar'
 
 // The data goes here
@@ -30,7 +29,7 @@ const mutations = {
 // Methods Assynchronous (Commits Mutations)
 const actions = {
   reloadMusics ({ commit }) {
-    axiosInstance.get('music', { headers: authHeader() }).then(response => {
+    axios_lam.get('music').then(response => {
       if (response.data.musics) {
         commit('reloadMusics', response.data.musics);
       }

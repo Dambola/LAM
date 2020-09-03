@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import musics from './store-musics';
 import types from './store-types';
 import authors from './store-authors';
+import user from './store-user';
 
 Vue.use(Vuex)
 
@@ -17,13 +18,13 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
+export default new Vuex.Store({
     modules: {
       // example
       musics,
       types,
-      authors
+      authors,
+      user
     },
 
     // enable strict mode (adds overhead!)
@@ -31,5 +32,3 @@ export default function (/* { ssrContext } */) {
     strict: process.env.DEV
   })
 
-  return Store
-}

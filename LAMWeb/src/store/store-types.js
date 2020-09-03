@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import { axiosInstance } from '../boot/axios'
-import authHeader from '../services/header-auth'
+import { axios_lam } from '../boot/axios'
 import { uid } from 'quasar'
 
 // The data goes here
@@ -18,7 +17,7 @@ const mutations = {
 // Methods Assynchronous (Commits Mutations)
 const actions = {
   reloadTypes ({ commit }) {
-    axiosInstance.get('type', { headers: authHeader() }).then(response => {
+    axios_lam.get('type').then(response => {
       if (response.data.types) {
         commit('reloadTypes', response.data.types);
       }

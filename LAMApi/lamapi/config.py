@@ -1,6 +1,6 @@
 class LAMConfiguration(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://lamapi:ajZ88Xi2ojnxq9baEUhZDEqhaEPDxpJvkXcest6bkvEiH8fLnI@localhost/louvoragapemontese'
+    SQLALCHEMY_DATABASE_URI = 'mysql://lamapi:ajZ88Xi2ojnxq9baEUhZDEqhaEPDxpJvkXcest6bkvEiH8fLnI@localhost/louvoragapemontese'
     SECRET_KEY = 'kjqOQXTvEgd1Aj2JyZ5x7SRgS49J60n0qF0w3uEG0nyCa5KqmCt19CZIGzbp'
     JWT_SECRET_KEY = 'super-secret'
     ALGORITHM = 'HS256'

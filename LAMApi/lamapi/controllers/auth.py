@@ -31,7 +31,7 @@ class AuthController(Resource):
         """TO-DO: Must create documentation here"""
 
         data = post_user_parser.parse_args()
-
+        
         login = data['login']
         password = passwordEncrypt(data['password'])
 

@@ -9,7 +9,8 @@
         </span>
       </div>
       <div id="welcome-home-text">
-        <small>Aplicativo do Louvor Ágape Montese</small>
+        <small>Aplicativo do Louvor Ágape Montese</small><br>
+        <small>LAM Alfa v0.0.1</small>
       </div>
       <div id="welcome-home-icon">
         <q-icon name="fas fa-users"></q-icon>

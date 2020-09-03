@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import routes from './routes'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -27,15 +28,14 @@ export default function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/login'];
-    const authRequired = !publicPages.includes(to.path);
-    const loggedIn = localStorage.getItem('user');
-  
-    if (authRequired && !loggedIn) {
-      return next('/login');
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      const access_token = store.state.user.access_token;
+      const login = store.state.user.login;
+
+      if (!access_token || !login) {
+        return next('/login');
+      }
     }
-  
     next();
   })
 
