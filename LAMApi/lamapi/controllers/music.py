@@ -9,9 +9,9 @@ from lamapi import db
 class MusicController(Resource):
 
     # ---- TO-DO: Get Music
-    @jwt_required
+    # @jwt_required
     def get(self):
-        user = get_jwt_identity()
+        # user = get_jwt_identity()
         musics = MusicModel.query.all()
 
         if isinstance(musics, list):

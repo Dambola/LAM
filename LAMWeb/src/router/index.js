@@ -28,14 +28,14 @@ export default function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      const access_token = store.state.user.access_token;
-      const login = store.state.user.login;
+    // if (to.matched.some(record => record.meta.requiresAuth)) {
+    //   const access_token = store.state.user.access_token;
+    //   const login = store.state.user.login;
 
-      if (!access_token || !login) {
-        return next('/login');
-      }
-    }
+    //   if (!access_token || !login) {
+    //     return next('/login');
+    //   }
+    // }
     next();
   })
 

@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh Lpr lFf">
+  <q-layout view="hHh Lpr lff">
     <q-header id="menu-header" elevated>
       <q-toolbar id="menu-toolbar">
         <!-- <q-btn flat @click="leftDrawerOpen = !leftDrawerOpen" round dense icon="menu" class="computer"/> -->
