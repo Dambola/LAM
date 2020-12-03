@@ -4,7 +4,7 @@ from flask_restful.reqparse import RequestParser
 from flask_jwt_extended import create_access_token
 
 from lamapi import db
-from lamapi.models.user import UserModel
+from lamapi.models.user import User
 from lamapi.auth import passwordEncrypt
 
 from sqlalchemy.exc import IntegrityError
@@ -35,7 +35,7 @@ class AuthController(Resource):
         login = data['login']
         password = passwordEncrypt(data['password'])
 
-        user = UserModel.query.filter_by(login=login, password=password).first()
+        user = User.query.filter_by(login=login, password=password).first()
 
         if user:
             return {
@@ -55,7 +55,7 @@ class AuthController(Resource):
         password = passwordEncrypt(data['password'])
         email = data['email']
 
-        new_user = UserModel(login=login, password=password, email=email)
+        new_user = User(login=login, password=password, email=email)
         try:
             new_user.saveToDB()
         except IntegrityError:

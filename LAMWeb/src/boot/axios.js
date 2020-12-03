@@ -7,7 +7,7 @@ import axios from 'axios'
 // Note that if we wouldn't set any config here we do not need
 // a named export, as we could just `import axios from 'axios'`
 const axios_lam = axios.create({
-  baseURL: 'http://www.louvoragapemontese.com.br:8390'
+  baseURL: process.env.API_URL
 })
 
 // for use inside Vue files through this.$axios

@@ -1,16 +1,18 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from lamapi.models import TypeModel
+from flask_jwt_extended import get_jwt_identity, jwt_required, get_current_user
+from lamapi.models import TypeModel, Permission
 from lamapi import db
+
 
 class PermissionController(Resource):
 
     # ---- TO-DO: Get Music
+    @jwt_required
     def get(self):
-        if '':
-            return { 'permissions' : []}, 200 
-        return { 'permissions': [] }, 200
-        # return { 'message': 'Não foi possível achar músicas' }, 500
+        user = get_jwt_identity()
+        perms = Permission.get_permissions(user)
+        return { 'permissions' : perms }, 200 
     
     # ---- TO-DO: Update Music
     def post(self):

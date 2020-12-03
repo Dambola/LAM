@@ -1,9 +1,9 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from lamapi.config import LAMConfiguration
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from lamapi.config import LAMConfiguration
 
 
 # Flask Basic Usage
@@ -20,4 +20,6 @@ jwt = JWTManager(app)
 
 @app.before_first_request
 def create_tables():
+    from lamapi.db_init import db_init
     db.create_all()
+    db_init(db)

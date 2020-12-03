@@ -43,7 +43,7 @@
 
     <q-dialog v-model="showDetailMusic" :full-width="true">
       <detail-music 
-        :music="clickedMusic"
+        :music="getMusicInfo(clickedMusic)"
         :id="clickedMusicID"
         @openEditMusic="openEditMusic"
         @close="showDetailMusic = false"
@@ -52,7 +52,7 @@
 
     <q-dialog v-model="showEditMusic" :full-width="true">
       <edit-music 
-        :music="clickedMusic"
+        :music="getMusicInfo(clickedMusic)"
         :id="clickedMusicID"
         @close="showEditMusic = false"
       />
@@ -103,6 +103,16 @@
         this.showAddMusic = false;
         this.showDetailMusic = false;
         this.showEditMusic = true;
+      },
+      getMusicInfo (music) {
+        if (!music) return null;
+        return {
+          name: music.name,
+          author: this.authors[music.author].name,
+          type1: this.types[music.type1] ? this.types[music.type1].name : null,
+          type2: this.types[music.type2] ? this.types[music.type2].name : null,
+          type3: this.types[music.type3] ? this.types[music.type3].name : null,
+        }
       },
       ...mapActions('types', ['reloadTypes']),
       ...mapActions('musics', ['reloadMusics']),

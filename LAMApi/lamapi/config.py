@@ -4,3 +4,14 @@ class LAMConfiguration(object):
     SECRET_KEY = 'kjqOQXTvEgd1Aj2JyZ5x7SRgS49J60n0qF0w3uEG0nyCa5KqmCt19CZIGzbp'
     JWT_SECRET_KEY = 'super-secret'
     ALGORITHM = 'HS256'
+
+class PermissionConfig(object):
+    ADD_MUSIC = 0
+    ADD_MUSIC_LABEL = "Adicionar Música"
+    ADD_MUSIC_DESC = "Permissão para adicionar músicas do repertório."
+    EDT_MUSIC = 1
+    EDT_MUSIC_LABEL = "Editar Música"
+    EDT_MUSIC_DESC = "Permissão para Editar músicas do repertório."
+    DEL_MUSIC = 2
+    DEL_MUSIC_LABEL = "Remover Música"
+    DEL_MUSIC_DESC = "Remover para adicionar músicas do repertório."

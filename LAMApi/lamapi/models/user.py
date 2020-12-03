@@ -1,6 +1,6 @@
 from lamapi import db
 
-class UserModel(db.Model):
+class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
@@ -10,6 +10,13 @@ class UserModel(db.Model):
     name = db.Column(db.String(120))
     smallname = db.Column(db.String(120))
     birthdate = db.Column(db.Date())
+
+    @classmethod
+    def get_user_id(cls, login):
+        user = cls.query.filter_by(login=login).first()
+        if user:
+            return user.id
+        return None
 
     def saveToDB(self):
         db.session.add(self)

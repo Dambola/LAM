@@ -18,6 +18,10 @@ class MusicController(Resource):
             return { 'musics' : dict([ music.asJSON() for music in musics ]) }, 200 
         return { 'msg': 'Algum erro aconteceu.' }, 200
     
+    # ---- TO-DO: Insert Music
+    def put(self):
+        return 'In progress (%s)...' % id
+
     # ---- TO-DO: Update Music
     def post(self):
         return 'In progress (%s)...' % id

@@ -6,7 +6,7 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
-module.exports = function (/* ctx */) {
+module.exports = function (ctx) {
     return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
@@ -104,6 +104,14 @@ module.exports = function (/* ctx */) {
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
       },
+
+      env: ctx.dev 
+      ? {
+        API_URL: JSON.stringify('http://localhost:8390')
+      } 
+      : {
+        API_URL: JSON.stringify('http://www.louvoragapemontese.com.br:8390')
+      }
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
