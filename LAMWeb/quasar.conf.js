@@ -12,7 +12,7 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
-      
+      'constants',
       'axios',
     ],
 
@@ -74,7 +74,8 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Dialog'
+        'Dialog',
+        'Cookies'
       ]
     },
 

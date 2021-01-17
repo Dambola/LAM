@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import routes from './routes'
 import store from '../store'
+import { Cookies } from 'quasar';
 
 Vue.use(VueRouter)
 
@@ -28,14 +29,17 @@ export default function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    // if (to.matched.some(record => record.meta.requiresAuth)) {
-    //   const access_token = store.state.user.access_token;
-    //   const login = store.state.user.login;
-
-    //   if (!access_token || !login) {
-    //     return next('/login');
-    //   }
-    // }
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (!Cookies.has('csrf_access_token')) {
+        return next('/login');
+      }
+      
+    } else if (to.path == '/login') {
+      if (Cookies.has('csrf_access_token')) {
+        return next('/');
+      }
+    }
+    
     next();
   })
 

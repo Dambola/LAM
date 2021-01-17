@@ -1,14 +1,15 @@
 from lamapi import db
 
-class MusicModel(db.Model):
+class Music(db.Model):
     __tablename__ = 'musics'
 
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String(100), nullable = False)
-    author = db.Column(db.Integer, nullable = False)
+    author = db.Column(db.String(100), nullable = False)
     type1 = db.Column(db.Integer, nullable = False)
     type2 = db.Column(db.Integer, nullable = True)
     type3 = db.Column(db.Integer, nullable = True)
+    db.UniqueConstraint(name, author)
 
     def saveToDB(self):
         db.session.add(self)

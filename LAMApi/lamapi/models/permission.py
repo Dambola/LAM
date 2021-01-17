@@ -17,8 +17,9 @@ class Permission(db.Model):
         return [perm.permission for perm in cls.query.filter_by(user=user_id).all()]
 
     @classmethod
-    def has_permission(cls, user, perm):
-        perm = cls.query.filter_by(user=user, permission=perm).first()
+    def has_permission(cls, login, perm):
+        user_id = User.get_user_id(login)
+        perm = cls.query.filter_by(user=user_id, permission=perm).first()
         return perm is not None
     
     def asJSON(self):

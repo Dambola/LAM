@@ -31,18 +31,19 @@
         password: ''
       };
     },
-    methods : {
+    methods : { 
       ...mapActions('user', ['doLogin']),
-      submitLogin () {
-        console.log('submiting the login ' + this.password);
-        var loginDone = this.doLogin({ 
-          username: this.username, password: this.password 
-        }).then((can_redirect) => {
-          console.log('pode? '+can_redirect);
+      async submitLogin () {
+        var loginDone = await this.doLogin({ 
+          username: this.username, 
+          password: this.password 
+        })
+        .then((can_redirect) => {
           if (can_redirect) {
-            this.$router.push(this.$route.query.redirect || '/');
+            this.$router.go('/');
           }
         });
+
       }
     }
   }
@@ -57,9 +58,6 @@
   
   #welcome-home-title {
     font-size: 20px;
-  }
-
-  #welcome-home-text {
   }
 
   #welcome-home-icon {

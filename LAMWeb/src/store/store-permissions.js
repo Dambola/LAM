@@ -4,31 +4,33 @@ import { uid } from 'quasar'
 
 // The data goes here
 const state = {
-  authors: {}
+    permissions: []
 };
 
 // Contains not assynchronous -> Change state directly
 const mutations = {
-  reloadAuthors (state, authors) {
-    state.authors = authors;
+  reloadPermissions (state, permissions) {
+    state.permissions = permissions;
   }
 };
 
 // Methods Assynchronous (Commits Mutations)
 const actions = {
-  reloadAuthors ({ commit }) {
-    axios_lam.get('author').then(response => {
-      if (response.data.authors) {
-        commit('reloadAuthors', response.data.authors);
+    reloadPermissions ({ commit }) {
+    axios_lam.get('permission').then(response => {
+      if (response.data.permissions) {
+        commit('reloadPermissions', response.data.permissions);
       }
+    }).catch(error => {
+      console.log(error.response);
     });
   }
 };
 
 // Get data from a State
 const getters = {
-  authors: (state) => {
-    return state.authors;
+  permissions: (state) => {
+    return state.permissions;
   }
 };
 

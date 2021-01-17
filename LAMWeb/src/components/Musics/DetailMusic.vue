@@ -57,18 +57,20 @@
             size="sm" 
             class="q-mx-md text-white bg-red-6" 
             @click="deleteThisMusic"
+            v-if="canDeleteMusic"
           />
           <q-btn 
             icon="fas fa-edit" 
             size="sm" 
             class="q-mx-md text-white bg-yellow-6" 
             @click="openEditMusic"
+            v-if="canEditMusic"
           />
-          <q-btn 
+          <!-- <q-btn 
             icon="fas fa-external-link-square-alt" 
             size="sm" 
             class="q-mx-md text-white bg-green-13" 
-          />
+          /> -->
         </div>
       </div>
 
@@ -88,12 +90,13 @@
       openEditMusic () {
         this.$emit('openEditMusic',this.id);
       },
+
       deleteThisMusic () {
         this.deleteMusic(this.id);
         this.$emit('close');
       }
     },
-    props: ['music','id']
+    props: ['music','id','canEditMusic','canDeleteMusic']
   };
 </script>
 

@@ -32,7 +32,11 @@
         <div class="row">
           <q-select 
             v-model="musicToSubmit.type1" 
-            :options="types" 
+            :options="getTypesOptions()" 
+            option-value="id"
+            option-label="name"
+            map-options
+            emit-value
             label="Tipo 1" 
             class="col"
           />
@@ -40,7 +44,11 @@
         <div class="row" v-if="musicToSubmit.type1">
           <q-select 
             v-model="musicToSubmit.type2" 
-            :options="types" 
+            :options="getTypesOptions()" 
+            option-value="id"
+            option-label="name"
+            map-options
+            emit-value
             label="Tipo 2"
             class="col"
             clearable
@@ -49,7 +57,11 @@
         <div class="row" v-if="musicToSubmit.type2">
           <q-select 
             v-model="musicToSubmit.type3" 
-            :options="types" 
+            :options="getTypesOptions()"
+            option-value="id"
+            option-label="name"
+            emit-value
+            map-options
             label="Tipo 3" 
             class="col"
             clearable 
@@ -70,7 +82,7 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   
   export default {
     data () {
@@ -82,24 +94,33 @@
           type2: '',
           type3: ''
         },
-        types: [
-          'Adoração',
-          'Oração',
-          'Júbilo'
-        ]
+        
       }
+    },
+    computed: {
+      ...mapGetters('types', ['types']),
     },
     methods: {
       ...mapActions('musics',['createMusic']),
       submitForm () {
-        this.$refs.name.validate()
+        this.$refs.name.validate();
         if (!this.$refs.name.hasError){
-          this.submitMusic()
+          this.submitMusic();
         }
       },
       submitMusic () {
-        this.createMusic(this.musicToSubmit)
-        this.$emit('close')
+        this.musicToSubmit.type1 = this.musicToSubmit.type1 ? parseInt(this.musicToSubmit.type1) : null;
+        this.musicToSubmit.type2 = this.musicToSubmit.type2 ? parseInt(this.musicToSubmit.type2) : null;
+        this.musicToSubmit.type3 = this.musicToSubmit.type3 ? parseInt(this.musicToSubmit.type3) : null;
+        this.createMusic(this.musicToSubmit);
+        this.$emit('close');
+      },
+      getTypesOptions () {
+        let options = [];
+        Object.keys(this.types).forEach((value, index) => {
+          options.push({ 'id': value, 'name': this.types[value].name })
+        });
+        return options;
       }
     }
   }

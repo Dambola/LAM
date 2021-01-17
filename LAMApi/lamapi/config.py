@@ -3,6 +3,10 @@ class LAMConfiguration(object):
     SQLALCHEMY_DATABASE_URI = 'mysql://lamapi:ajZ88Xi2ojnxq9baEUhZDEqhaEPDxpJvkXcest6bkvEiH8fLnI@localhost/louvoragapemontese'
     SECRET_KEY = 'kjqOQXTvEgd1Aj2JyZ5x7SRgS49J60n0qF0w3uEG0nyCa5KqmCt19CZIGzbp'
     JWT_SECRET_KEY = 'super-secret'
+    JWT_TOKEN_LOCATION = ['cookies']
+    JWT_COOKIE_CSRF_PROTECT = True
+    JWT_CSRF_CHECK_FORM = True
+    SESSION_COOKIE_SECURE = True
     ALGORITHM = 'HS256'
 
 class PermissionConfig(object):

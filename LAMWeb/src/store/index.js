@@ -4,8 +4,8 @@ import Vuex from 'vuex';
 // import example from './module-example'
 import musics from './store-musics';
 import types from './store-types';
-import authors from './store-authors';
 import user from './store-user';
+import permissions from './store-permissions';
 
 Vue.use(Vuex)
 
@@ -23,8 +23,8 @@ export default new Vuex.Store({
       // example
       musics,
       types,
-      authors,
-      user
+      user,
+      permissions
     },
 
     // enable strict mode (adds overhead!)

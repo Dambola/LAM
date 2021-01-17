@@ -6,6 +6,11 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  methods : {
+    mounted() {
+      reloadUser();
+    }
+  }
 }
 </script>

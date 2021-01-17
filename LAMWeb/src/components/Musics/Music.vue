@@ -2,7 +2,7 @@
   <tr @click="openDetailMusic">
     <td class="text-left">
       <div class="text-subtitle1"><strong>{{ music.name }}</strong></div>
-      <small>{{ getAuthorName(music.author) }}</small>
+      <small>{{ music.author }}</small>
     </td>
     <td class="text-right">
       <div>{{ getTypeName(music.type1) }}</div>
@@ -18,7 +18,6 @@
   export default {
     props : ['music', 'id'],
     computed : {
-      ...mapGetters('authors', ['authors']),
       ...mapGetters('types', ['types']),
     },
     methods : {
@@ -44,12 +43,6 @@
       getTypeName(type) {
         if (type !== null && this.types[type] !== null) {
           return this.types[type].name;
-        }
-        return '';
-      },
-      getAuthorName(author) {
-        if (author !== null && this.authors[author] !== null) {
-          return this.authors[author].name;
         }
         return '';
       }

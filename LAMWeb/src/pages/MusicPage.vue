@@ -3,7 +3,6 @@
     <q-markup-table 
       class="lam-table-music col-12" 
       :wrap-cells="true"
-      v-if="Object.keys(musics).length"
     >
       <thead>
         <tr>
@@ -16,7 +15,7 @@
               class="absolute-center"
               @click.stop="showAddMusic = true"
               dense 
-              v-if="canAddMusic"
+              v-if="canAddMusic()"
             />
             Música
           </th>
@@ -45,6 +44,8 @@
       <detail-music 
         :music="getMusicInfo(clickedMusic)"
         :id="clickedMusicID"
+        :canEditMusic="canEditMusic()"
+        :canDeleteMusic="canDeleteMusic()"
         @openEditMusic="openEditMusic"
         @close="showDetailMusic = false"
       />
@@ -67,18 +68,17 @@
     name: 'Músicas',
     computed: {
       ...mapGetters('musics', ['musics']),
-      ...mapGetters('authors', ['authors']),
       ...mapGetters('types', ['types']),
-      canAddMusic () {
-        return true;
-      }
+      ...mapGetters('permissions', ['permissions']),
     },
+
     components: {
       'music' : require('components/Musics/Music.vue').default,
       'add-music' : require('components/Musics/AddMusic.vue').default,
       'detail-music' : require('components/Musics/DetailMusic.vue').default,
       'edit-music' : require('components/Musics/EditMusic.vue').default
     },
+
     data () {
       return {
         showAddMusic: false,
@@ -96,6 +96,7 @@
         this.showEditMusic = false;
         this.showDetailMusic = true;
       },
+
       openEditMusic (index) {
         console.log('Teste: ' + index);
         this.clickedMusicID = index;
@@ -104,23 +105,30 @@
         this.showDetailMusic = false;
         this.showEditMusic = true;
       },
+
       getMusicInfo (music) {
         if (!music) return null;
         return {
           name: music.name,
-          author: this.authors[music.author].name,
+          author: music.author,
           type1: this.types[music.type1] ? this.types[music.type1].name : null,
           type2: this.types[music.type2] ? this.types[music.type2].name : null,
           type3: this.types[music.type3] ? this.types[music.type3].name : null,
         }
       },
+
+      canAddMusic () { return this.permissions.indexOf(this.$perms.ADD_MUSIC) != -1; },
+      canEditMusic () { return this.permissions.indexOf(this.$perms.EDT_MUSIC) != -1; },
+      canDeleteMusic () { return this.permissions.indexOf(this.$perms.DEL_MUSIC) != -1; },
+
+      ...mapActions('permissions', ['reloadPermissions']),
       ...mapActions('types', ['reloadTypes']),
       ...mapActions('musics', ['reloadMusics']),
-      ...mapActions('authors', ['reloadAuthors']),
     },
+
     mounted () {
+      this.reloadPermissions();
       this.reloadTypes();
-      this.reloadAuthors();
       this.reloadMusics();
     }
   }
