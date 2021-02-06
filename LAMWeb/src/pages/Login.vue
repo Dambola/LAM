@@ -34,16 +34,14 @@
     methods : { 
       ...mapActions('user', ['doLogin']),
       async submitLogin () {
-        var loginDone = await this.doLogin({ 
+        const canRedirect = await this.doLogin({ 
           username: this.username, 
           password: this.password 
-        })
-        .then((can_redirect) => {
-          if (can_redirect) {
-            this.$router.go('/');
-          }
         });
 
+        if (canRedirect) {
+          this.$router.go('/');
+        }
       }
     }
   }

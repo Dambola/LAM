@@ -31,13 +31,13 @@ def create_tables():
 @jwt.invalid_token_loader
 def invalid_token_callback(callback):
     # Invalid Fresh/Non-Fresh Access token in auth header
-    response = make_response(json.dumps({ 'msg': 'Invalid JWT Token.' }))
+    response = make_response(json.dumps({ 'msg': 'Invalid JWT Token.', 'mustReload': True }))
     unset_jwt_cookies(response)
     return response, 401
 
 @jwt.expired_token_loader
 def expired_token_callback(callback):
     # Expired auth header
-    response = make_response(json.dumps({ 'msg': 'Expired JWT Token.' }))
+    response = make_response(json.dumps({ 'msg': 'Expired JWT Token.', 'mustReload': True }))
     unset_access_cookies(response)
     return response, 401

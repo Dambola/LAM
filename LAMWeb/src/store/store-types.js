@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { axios_lam } from '../boot/axios'
+import { lamapi } from '../boot/axios'
 import { uid } from 'quasar'
 
 // The data goes here
@@ -17,7 +17,7 @@ const mutations = {
 // Methods Assynchronous (Commits Mutations)
 const actions = {
   reloadTypes ({ commit }) {
-    axios_lam.get('type').then(response => {
+    lamapi.get('type').then(response => {
       if (response.data.types) {
         commit('reloadTypes', response.data.types);
       }

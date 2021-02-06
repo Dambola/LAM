@@ -24,16 +24,6 @@ post_user_parser.add_argument('password', help = 'Este campo é obrigatório', r
 class AuthController(Resource):
     """TO-DO: Must create documentation here"""
 
-    # ---- TO-DO: Get Auth
-    @jwt_required
-    def get(self):
-        user = User.query.filter_by(login=get_jwt_identity()).first()
-
-        if not user:
-            return { 'msg': 'Login não estão corretos.' }, 401
-
-        return { 'login': user.login, 'email': user.email }
-
     # ---- TO-DO: Post Auth
     def post(self):
         """TO-DO: Must create documentation here"""
@@ -48,8 +38,9 @@ class AuthController(Resource):
         if not user:
             return { 'msg': 'Login e/ou Senha não estão corretos.' }, 401
         
+        response_data = { 'msg': 'Login was done.', 'login': user.login, 'email': user.email }
         access_token = create_access_token(identity=user.login, headers={ 'email' : user.email })
-        response = make_response(json.dumps({ 'msg': 'Login was done.' }))
+        response = make_response(json.dumps(response_data))
         set_access_cookies(response, access_token)
         return response
 

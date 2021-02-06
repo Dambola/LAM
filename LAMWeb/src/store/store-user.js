@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { axios_lam } from '../boot/axios'
+import { lamapi } from '../boot/axios'
 import { uid } from 'quasar'
 
 // The data goes here
@@ -10,7 +10,8 @@ const state = {
 
 // Contains not assynchronous -> Change state directly
 const mutations = {
-  reloadUser (state, payload) {
+  doLogin (state, payload) {
+    console.log('entrou aqui!');
     state.login = payload.login;
     state.email = payload.email;
   }
@@ -18,39 +19,25 @@ const mutations = {
 
 // Methods Assynchronous (Commits Mutations)
 const actions = {
-  doLogin ({ commit }, payload) {
+  async doLogin ({ commit }, payload) {
     const params = {
         login: payload.username,
         password: payload.password
     };
-
-    return axios_lam.post('auth', params)
-    .then(response => {
-        return true;
-    })
-    .finally(function() {
-      return false;
-    });
-  },
-
-  reloadUser({ commit }) {
-    axios_lam.get('auth').then(response => {
-      const payload = {
-        'username': response.data.login,
-        'password': response.data.email
-      };
+    
+    try {
+      const response = await lamapi.post('auth', params);
+      const { data } = await response;
+      console.log(data);
+      commit('doLogin', { login: data.login, email: data.email });
       
-      commit('reloadTypes', payload);
-    });
-  },
+    } catch (error) {  
+      return false;
+    }
 
-  register (user) {
-    return axios_lam.put('auth', {
-      username: user.username,
-      email: user.email,
-      password: user.password
-    });
-  },
+    debugger;
+    return true;
+  }
 };
 
 // Get data from a State

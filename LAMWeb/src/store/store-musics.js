@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { axios_lam } from '../boot/axios'
+import { lamapi } from '../boot/axios'
 import { uid } from 'quasar'
 
 // The data goes here
@@ -29,7 +29,7 @@ const mutations = {
 // Methods Assynchronous (Commits Mutations)
 const actions = {
   reloadMusics ({ commit }) {
-    axios_lam.get('music').then(response => {
+    lamapi.get('music').then(response => {
       if (response.data.musics) {
         commit('reloadMusics', response.data.musics);
       }
@@ -45,12 +45,24 @@ const actions = {
   },
   
   createMusic ({ commit }, music) {
-    let musicId = uid();
-    let payload = {
-      id: musicId,
-      music: music
-    };
-    commit('createMusic', payload);
+    const params = {
+      name: music.name,
+      author: music.author,
+      type1: music.type1,
+      type2: music.type2,
+      type3: music.type3,
+    }
+
+    lamapi.put('music', params).then(response => {
+      if (response.data.id) {
+        let payload = {
+          id: response.data.id,
+          music: music
+        };
+
+        commit('createMusic', payload);
+      }
+    });
   }
 };
 

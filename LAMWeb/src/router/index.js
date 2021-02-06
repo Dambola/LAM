@@ -29,13 +29,14 @@ export default function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
+    console.log(store.state.user);
     if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (!Cookies.has('csrf_access_token')) {
+      if (store.state.email == null || store.state.login == null) {
         return next('/login');
       }
-      
+
     } else if (to.path == '/login') {
-      if (Cookies.has('csrf_access_token')) {
+      if (store.state.email != null && store.state.login != null) {
         return next('/');
       }
     }

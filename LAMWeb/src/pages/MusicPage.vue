@@ -98,7 +98,6 @@
       },
 
       openEditMusic (index) {
-        console.log('Teste: ' + index);
         this.clickedMusicID = index;
         this.clickedMusic = this.musics[index];
         this.showAddMusic = false;

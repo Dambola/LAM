@@ -40,6 +40,7 @@ class MusicController(Resource):
     def put(self):
         """TO-DO: Must create documentation here"""
         user = get_jwt_identity()
+        print(user)
         if not Permission.has_permission(user, PC.ADD_MUSIC):
             return { 'msg': 'You don\'t have permission for that.' }, 401
 

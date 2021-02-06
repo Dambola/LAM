@@ -82,12 +82,7 @@
           type1: this.music.type1,
           type2: this.music.type2,
           type3: this.music.type3
-        },
-        types: [
-          'Adoração',
-          'Oração',
-          'Júbilo'
-        ]
+        }
       }
     },
     methods: {
@@ -98,8 +93,8 @@
           this.submitMusic();
         }
       },
+
       submitMusic () {
-        console.log('teste');
         this.updateMusic({ id: this.id, updates: this.musicToSubmit });
         this.$emit('close');
       }
