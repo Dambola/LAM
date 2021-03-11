@@ -5,5 +5,6 @@
 - pip install flask_sqlalchemy==2.4.4
 - pip install flask_jwt_extended==3.25.0
 - pip install flask_cors==3.0.9
+- pip install pytest==6.2.2
 - pip install mysql
 - pip install pymysql

@@ -1,0 +1,14 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+The versioning system is:
+Given a version number A.B.C, increment the:
+1. A version when you make imcompatible changes, big structural changes or when you changes the Main Features of the program.
+2. B version when you add a functionality.
+3. C version when you fix a problem.
+
+## [Unreleased]
+### Added
+
+[Unreleased]: https://github.com/Dambola/LAM/tree/master
