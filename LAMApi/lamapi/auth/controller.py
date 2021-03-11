@@ -56,7 +56,7 @@ class AuthController(Resource):
 
         new_user = User(login=login, password=password, email=email)
         try:
-            new_user.saveToDB()
+            new_user.saveToDb()
         except IntegrityError:
             return { 'msg': f'Login {login} ou/e Email {email} ja está sendo usado.'}, 200
         except:

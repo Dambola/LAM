@@ -1,5 +1,5 @@
 from lamapi import db
-from lamapi.models import User
+from lamapi.auth.model import User
 
 class Permission(db.Model):
     __tablename__ = 'permission'
@@ -7,22 +7,22 @@ class Permission(db.Model):
     permission = db.Column(db.Integer, primary_key = True, nullable = False)
     user = db.Column(db.Integer, primary_key = True, nullable = False)
     
-    def saveToDB(self):
+    def saveToDb(self):
         db.session.add(self)
         db.session.commit()
     
     @classmethod
-    def get_permissions(cls, login):
-        user_id = User.get_user_id(login)
+    def getPermissions(cls, login):
+        user_id = User.getUserId(login)
         return [perm.permission for perm in cls.query.filter_by(user=user_id).all()]
 
     @classmethod
-    def has_permission(cls, login, perm):
-        user_id = User.get_user_id(login)
+    def hasPermission(cls, login, perm):
+        user_id = User.getUserId(login)
         perm = cls.query.filter_by(user=user_id, permission=perm).first()
         return perm is not None
     
-    def asJSON(self):
+    def asJson(self):
         return {
             'user'    : self.user,
             'permission' : self.permission
@@ -36,11 +36,11 @@ class PermissionConfig(db.Model):
     label = db.Column(db.String(120), nullable = False)
     description = db.Column(db.String(340), nullable = False)
     
-    def saveToDB(self):
+    def saveToDb(self):
         db.session.add(self)
         db.session.commit()
     
-    def asJSON(self):
+    def asJson(self):
         return {
             'id'          : self.id,
             'name'        : self.name,

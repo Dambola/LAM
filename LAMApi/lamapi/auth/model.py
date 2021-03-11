@@ -12,17 +12,17 @@ class User(db.Model):
     birthdate = db.Column(db.Date())
 
     @classmethod
-    def get_user_id(cls, login):
+    def getUserId(cls, login):
         user = cls.query.filter_by(login=login).first()
         if user:
             return user.id
         return None
 
-    def saveToDB(self):
+    def saveToDb(self):
         db.session.add(self)
         db.session.commit()
     
-    def asJSON(self):
+    def asJson(self):
         return {
             'id'       : self.id,
             'login'    : self.login,

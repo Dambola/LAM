@@ -11,7 +11,7 @@ class PermissionController(Resource):
     @jwt_required
     def get(self):
         user = get_jwt_identity()
-        perms = Permission.get_permissions(user)
+        perms = Permission.getPermissions(user)
         return { 'permissions' : perms }, 200 
     
     # ---- TO-DO: Update Permission

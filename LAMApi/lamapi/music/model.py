@@ -11,11 +11,11 @@ class Music(db.Model):
     type3 = db.Column(db.Integer, nullable = True)
     db.UniqueConstraint(name, author)
 
-    def saveToDB(self):
+    def saveToDb(self):
         db.session.add(self)
         db.session.commit()
     
-    def asJSON(self):
+    def asJson(self):
         return self.id, {
             'name'   : self.name,
             'author' : self.author,

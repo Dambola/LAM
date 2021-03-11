@@ -9,7 +9,7 @@ class TypeController(Resource):
     def get(self):
         types = TypeModel.query.all()
         if types:
-            return { 'types' : dict([ type.asJSON() for type in types ]) }, 200 
+            return { 'types' : dict([ type.asJson() for type in types ]) }, 200 
         return { 'message': 'Não foi possível achar músicas' }, 500
     
     # ---- TO-DO: Update Music

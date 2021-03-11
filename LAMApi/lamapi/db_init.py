@@ -1,21 +1,21 @@
 from lamapi.config import PermissionConfig as PC
-from lamapi.models.permission import PermissionConfig as PCM
+from lamapi.models.permission import PermissionConfig
 
 from sqlalchemy.exc import IntegrityError
 
 def db_init(db):
     permissions = [
-        PCM(id=PC.ADD_MUSIC, 
+        PermissionConfig(id=PC.ADD_MUSIC, 
         name='ADD_MUSIC', 
         label=PC.ADD_MUSIC_LABEL, 
         description=PC.ADD_MUSIC_DESC),
 
-        PCM(id=PC.EDT_MUSIC, 
+        PermissionConfig(id=PC.EDT_MUSIC, 
         name='EDT_MUSIC', 
         label=PC.EDT_MUSIC_LABEL, 
         description=PC.EDT_MUSIC_DESC),
 
-        PCM(id=PC.DEL_MUSIC, 
+        PermissionConfig(id=PC.DEL_MUSIC, 
         name='DEL_MUSIC', 
         label=PC.DEL_MUSIC_LABEL, 
         description=PC.DEL_MUSIC_DESC),

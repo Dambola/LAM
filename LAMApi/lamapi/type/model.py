@@ -6,11 +6,11 @@ class TypeModel(db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String(100), nullable = False, unique = True)
 
-    def saveToDB(self):
+    def saveToDb(self):
         db.session.add(self)
         db.session.commit()
     
-    def asJSON(self):
+    def asJson(self):
         return self.id, {
             'name'   : self.name
         }
