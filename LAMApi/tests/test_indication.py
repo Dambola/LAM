@@ -9,20 +9,22 @@ import pytest
 
 class TestIndicationManager(object):
 
-    
+
     # ---- Add tests
 
+    @pytest.mark.run(order=10)
     def testAddIndication1(self):
         indication_id = self.__add_indication(Indication1)
         Indication1.id = indication_id
         assert indication_id
 
-    
+    @pytest.mark.run(order=11)
     def testAddIndication2(self):
         indication_id = self.__add_indication(Indication2)
         Indication2.id = indication_id
         assert indication_id 
 
+    @pytest.mark.run(order=12)
     def testAddIndication3(self, client):
         indication_id = self.__add_indication(Indication3)
         assert not indication_id
@@ -30,6 +32,7 @@ class TestIndicationManager(object):
 
     # ---- Search tests
 
+    @pytest.mark.run(order=13)
     def testGetAllIndications(self):
         manager = IndicationManager()
         indications = manager.getAllIndications()
@@ -37,6 +40,7 @@ class TestIndicationManager(object):
         assert self.__is_inside(Indication1.id, indications) and \
             self.__is_inside(Indication2.id, indications)
     
+    @pytest.mark.run(order=14)
     def testGetAllIndicationsWithCriteria(self):
         manager = IndicationManager()
         criteria1 = dict(name=Indication1.name, author=Indication1.author)
@@ -46,6 +50,7 @@ class TestIndicationManager(object):
         assert self.__is_inside(Indication1.id, indications) and \
             self.__is_inside(Indication2.id, indications)
     
+    @pytest.mark.run(order=15)
     def testGetAnIndication(self):
         manager = IndicationManager()
 
@@ -60,22 +65,24 @@ class TestIndicationManager(object):
 
     # ---- Refuse tests
 
+    @pytest.mark.run(order=16)
     def testRefuseIndication(self):
         manager = IndicationManager()
 
         by_id = Indication1.id
-        
-        manager.approveIndication(by_id)
+
+        manager.refuseIndication(by_id)
         indication = manager.getAnIndication(by_id)
         music = Music.query \
             .filter_by(name=Indication1.name, author=Indication1.author) \
                 .first()
 
-        assert not indication and not music
+        assert (not indication) and (not music)
     
 
     # ---- Approve tests
 
+    @pytest.mark.run(order=17)
     def testApproveIndication(self):
         manager = IndicationManager()
 
@@ -86,15 +93,18 @@ class TestIndicationManager(object):
         music = Music.query \
             .filter_by(name=Indication2.name, author=Indication2.author) \
                 .first()
+        
+        is_music = music is not None
+        music.doDelete()
 
-        assert not indication and music
+        assert (not indication) and is_music
     
 
     # ---- Internal methods
 
-    def __is_inside(_id, _indications):
+    def __is_inside(self, _id, _indications):
         for indication in _indications:
-            if indication['id'] == _id:
+            if indication.id == _id:
                 return True
         return False
 
@@ -103,8 +113,8 @@ class TestIndicationManager(object):
             manager = IndicationManager()
             data = self.__indication_to_dict(indication)
             return manager.addIndication(data)
-        except: 
-            return None
+        except Exception as e:
+            raise e
 
     def __indication_to_dict(self, indication):
         return {
@@ -113,6 +123,6 @@ class TestIndicationManager(object):
             'type1' : indication.type1,
             'type2' : indication.type2,
             'type3' : indication.type3,
-            'user'  : User.getUserId(indication.user),
+            'user'  : User.getUserId(indication.user.login),
             'link'  : indication.link,
         }

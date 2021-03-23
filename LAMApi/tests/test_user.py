@@ -16,7 +16,7 @@ class TestUser(object):
         
         assert user_created
     
-    @pytest.mark.run(order=11)
+    @pytest.mark.run(order=20)
     def testUserDelete(self):
         user = User1
 

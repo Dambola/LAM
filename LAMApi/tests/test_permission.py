@@ -58,7 +58,7 @@ class TestPermission(object):
             Permission.hasPermission(user.login, perm_2) and \
                 Permission.hasPermission(user.login, perm_3)
 
-    @pytest.mark.run(order=10)
+    @pytest.mark.run(order=18)
     def testPermissionDeleteAll(self):
         user = User1
         user_id = User.getUserId(user.login)
