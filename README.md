@@ -44,17 +44,25 @@ The footer is used to specify or alert something important. Soo the footer must 
 ```
 
 ## Running
-### Testing
 First install pytest-cov (pip install pytest-cov)
 
+### Unit Testing
 For cmd report:
 ```
-pytest -vv --cov=moppy tests
+pytest -vv --cov=lamapi tests
 ```
 
 For complex html report (the report will be exported in "htmlcov" folder):
 ```
-pytest -vv --cov=moppy --cov-report=html tests
+pytest -vv --cov=lamapi --cov-report=html tests
+```
+
+### Integration Testing
+First install pytest-cov (pip install pytest-cov)
+
+For cmd report:
+```
+pytest -vv e2e
 ```
 
 ## Code Information:
