@@ -28,6 +28,7 @@ const actions = {
     try {
       const response = await lamapi.post('auth', params);
       const { data } = await response;
+      debugger;
       console.log(data);
       commit('doLogin', { login: data.login, email: data.email });
       

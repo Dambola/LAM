@@ -1,5 +1,5 @@
 from lamapi.config import PermissionConfig as PC
-from lamapi.models.permission import PermissionConfig
+from lamapi.permission.model import PermissionConfig
 
 from sqlalchemy.exc import IntegrityError
 

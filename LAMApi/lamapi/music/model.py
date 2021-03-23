@@ -11,9 +11,25 @@ class Music(db.Model):
     type3 = db.Column(db.Integer, nullable = True)
     db.UniqueConstraint(name, author)
 
-    def saveToDb(self):
-        db.session.add(self)
-        db.session.commit()
+    def doSave(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+        finally:
+            db.session.close()
+    
+    def doDelete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+        finally:
+            db.session.close()
     
     def asJson(self):
         return self.id, {

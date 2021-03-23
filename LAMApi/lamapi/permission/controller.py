@@ -1,7 +1,9 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from lamapi.models import TypeModel, Permission
+
+from lamapi.type.model import Type
+from lamapi.permission.model import Permission
 from lamapi import db
 
 

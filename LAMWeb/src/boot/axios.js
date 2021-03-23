@@ -2,7 +2,7 @@
 
 import Vue from 'vue'
 import axios from 'axios'
-import router from '../router'
+import Router from '../router'
 
 // We create our own axios instance and set a custom base URL.
 // Note that if we wouldn't set any config here we do not need
@@ -20,7 +20,12 @@ lamapi.interceptors.response.use(
   (error) => {
     const response = error.response;
     if (401 === response.status && response.data.mustReload) {
-      router.push('/login');
+      localStorage.removeItem('login');
+      localStorage.removeItem('email');
+
+      const router = Router();
+      console.log(router);
+      router.go('/login');
     }
     return Promise.reject(error)
   }

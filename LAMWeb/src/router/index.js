@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import routes from './routes'
-import store from '../store'
-import { Cookies } from 'quasar';
 
 Vue.use(VueRouter)
 
@@ -29,14 +27,16 @@ export default function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    console.log(store.state.user);
+    const login = localStorage.getItem('login');
+    const email = localStorage.getItem('email');
+
     if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (store.state.email == null || store.state.login == null) {
+      if (login == null || email == null) {
         return next('/login');
       }
 
     } else if (to.path == '/login') {
-      if (store.state.email != null && store.state.login != null) {
+      if (login != null && email != null) {
         return next('/');
       }
     }

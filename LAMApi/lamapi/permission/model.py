@@ -7,9 +7,25 @@ class Permission(db.Model):
     permission = db.Column(db.Integer, primary_key = True, nullable = False)
     user = db.Column(db.Integer, primary_key = True, nullable = False)
     
-    def saveToDb(self):
-        db.session.add(self)
-        db.session.commit()
+    def doSave(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+        finally:
+            db.session.close()
+    
+    def doDelete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+        finally:
+            db.session.close()
     
     @classmethod
     def getPermissions(cls, login):
@@ -17,10 +33,21 @@ class Permission(db.Model):
         return [perm.permission for perm in cls.query.filter_by(user=user_id).all()]
 
     @classmethod
-    def hasPermission(cls, login, perm):
-        user_id = User.getUserId(login)
+    def hasPermission(cls, login, perm, user_id = None):
+        user_id = user_id or User.getUserId(login)
         perm = cls.query.filter_by(user=user_id, permission=perm).first()
         return perm is not None
+
+    @classmethod
+    def deletePermission(cls, login, perm, user_id = None):
+        user_id = user_id or User.getUserId(login)
+        perm = cls.query.filter_by(user=user_id, permission=perm).first()
+
+        if perm:
+            perm.doDelete()
+            return True
+
+        return False
     
     def asJson(self):
         return {
@@ -36,9 +63,15 @@ class PermissionConfig(db.Model):
     label = db.Column(db.String(120), nullable = False)
     description = db.Column(db.String(340), nullable = False)
     
-    def saveToDb(self):
-        db.session.add(self)
-        db.session.commit()
+    def doSave(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise e
+        finally:
+            db.session.close()
     
     def asJson(self):
         return {
