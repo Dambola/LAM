@@ -24,12 +24,3 @@ class DbBasicOperations(object):
             raise e
         finally:
             db.session.close()
-    
-    def asJson(self):
-        return self.id, {
-            'name'   : self.name,
-            'author' : self.author,
-            'type1'  : self.type1,
-            'type2'  : self.type2,
-            'type3'  : self.type3,
-        }

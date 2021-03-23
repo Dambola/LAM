@@ -20,74 +20,36 @@ class IndicationManager(metaclass=SingletonMeta):
         user = db.Column(db.Integer, nullable = False)
         link = db.Column(db.String(150), nullable = True)
         db.UniqueConstraint(name, author)
+
+        def asJson(self):
+            return self.id, {
+                'name'   : self.name,
+                'author' : self.author,
+                'type1'  : self.type1,
+                'type2'  : self.type2,
+                'type3'  : self.type3,
+                'user'   : self.user,
+                'link'   : self.link,
+            }
     
     __meta = __MetaIndication
     
     def addIndication(self, indication):
-        if not isinstance(indication, dict):
-            raise NotValidIndication('Indication must be a dict type.')
-
-        if 'name' not in indication:
-            raise NotValidIndication('Name not found in indication.')
-
-        if 'author' not in indication:
-            raise NotValidIndication('Author not found in indication.')
-
-        if 'type1' not in indication:
-            raise NotValidIndication('Type 1 not found in indication.')
-
-        if 'user' not in indication:
-            raise NotValidIndication('User not found in indication.')
-        
-        kwargs = {
-            'name': indication.get('name'),
-            'author': indication.get('author'),
-            'type1': indication.get('type1'),
-            'type2': indication.get('type2'),
-            'type3': indication.get('type3'),
-            'user': indication.get('user'),
-            'link': indication.get('link'),
-        }
-
-        obj = self.__meta(**kwargs)
-
-        try:
-            obj.doSave()
-            obj_id = obj.id
-        except Exception as e:
-            obj_id = None
-
-        return obj_id
+        self.__validateIndicationDict(indication)
+        kwargs = self.__dictToKwargs(indication)
+        meta_object = self.__meta(**kwargs)
+        return self.__doSave(meta_object)
     
     def approveIndication(self, indication_id: int):
         indication = self.getAnIndication(indication_id)
 
         if not indication:
-            raise Exception(str(indication_id))
             return False
 
-        try:
-            music = Music(
-                name=indication.name, 
-                author=indication.author, 
-                type1=indication.type1,
-                type2=indication.type2,
-                type3=indication.type3,
-            )
-            music.doSave()
-        except Exception as e:
-            raise e
-            return False
-        
-        obj = self.__meta.query.filter_by(id=indication_id).first()
-        
-        try:
-            obj.doDelete()
-        except Exception as e:
-            raise e
-            return False
+        self.__createMusic(indication)
 
-        return True
+        meta_object = self.__meta.query.filter_by(id=indication_id).first()
+        return self.__doDelete(meta_object)
 
     def refuseIndication(self, indication_id: int):
         indication = self.getAnIndication(indication_id)
@@ -95,14 +57,8 @@ class IndicationManager(metaclass=SingletonMeta):
         if not indication:
             return False
         
-        obj = self.__meta.query.filter_by(id=indication_id).first()
-        
-        try:
-            obj.doDelete()
-        except:
-            return False
-
-        return True
+        meta_object = self.__meta.query.filter_by(id=indication_id).first()
+        return self.__doDelete(meta_object)
 
     def getAllIndications(self, *args):
         clauses = []
@@ -113,55 +69,94 @@ class IndicationManager(metaclass=SingletonMeta):
             
             clause = []
 
-            name = arg.get('name')
-            author = arg.get('author')
-            type1 = arg.get('type1')
-            type2 = arg.get('type2')
-            type3 = arg.get('type3')
-            user = arg.get('user')
-            link = arg.get('link')
+            kwargs = self.__dictToKwargs(arg)
                 
-            if name: clause.append(self.__meta.name == name)
-            if author: clause.append(self.__meta.author == author)
-            if type1: clause.append(self.__meta.type1 == type1)
-            if type2: clause.append(self.__meta.type2 == type2)
-            if type3: clause.append(self.__meta.type3 == type3)
-            if user: clause.append(self.__meta.user == user)
-            if link: clause.append(self.__meta.link == link)
+            if kwargs['name']: clause.append(self.__meta.name == kwargs['name'])
+            if kwargs['author']: clause.append(self.__meta.author == kwargs['author'])
+            if kwargs['type1']: clause.append(self.__meta.type1 == kwargs['type1'])
+            if kwargs['type2']: clause.append(self.__meta.type2 == kwargs['type2'])
+            if kwargs['type3']: clause.append(self.__meta.type3 == kwargs['type3'])
+            if kwargs['user']: clause.append(self.__meta.user == kwargs['user'])
+            if kwargs['link']: clause.append(self.__meta.link == kwargs['link'])
 
             clauses.append(and_(*clause))
         
         return self.__meta.query.filter(or_(*clauses)).all()
 
     def getAnIndication(self, indication):
+        operator = self.__getNoneIndication
         if isinstance(indication, int):
-            return self.__meta.query.filter_by(id=indication).first()
-
+            operator = self.__getAnIndicationAsInt
         elif isinstance(indication, dict):
-            if 'name' not in indication:
-                raise NotValidIndication('Name not found in indication.')
+            operator = self.__getAnIndicationAsDict
+        return operator(indication)
+    
 
-            if 'author' not in indication:
-                raise NotValidIndication('Author not found in indication.')
+    # ---- Internal methods
+    
+    def __dictToKwargs(self, _dict):
+        return {
+            'name': _dict.get('name'),
+            'author': _dict.get('author'),
+            'type1': _dict.get('type1'),
+            'type2': _dict.get('type2'),
+            'type3': _dict.get('type3'),
+            'user': _dict.get('user'),
+            'link': _dict.get('link'),
+        }
+    
+    def __validateIndicationDict(self, _dict):
+        if not isinstance(_dict, dict):
+            raise NotValidIndication('Indication must be a dict type.')
 
-            if 'type1' not in indication:
-                raise NotValidIndication('Type 1 not found in indication.')
+        if 'name' not in _dict:
+            raise NotValidIndication('Name not found in indication.')
 
-            if 'user' not in indication:
-                raise NotValidIndication('User not found in indication.')
+        if 'author' not in _dict:
+            raise NotValidIndication('Author not found in indication.')
 
-            kwargs = {
-                'name': indication.get('name'),
-                'author': indication.get('author'),
-                'type1': indication.get('type1'),
-                'type2': indication.get('type2'),
-                'type3': indication.get('type3'),
-                'user': indication.get('user'),
-                'link': indication.get('link'),
-            }
+        if 'type1' not in _dict:
+            raise NotValidIndication('Type 1 not found in indication.')
 
-            return self.__meta.query.filter_by(**kwargs).first()
+        if 'user' not in _dict:
+            raise NotValidIndication('User not found in indication.')
+        
+    def __getAnIndicationAsInt(self, indication: int):
+        return self.__meta.query.filter_by(id=indication).first()
+
+    def __getAnIndicationAsDict(self, indication: dict):
+        self.__validateIndicationDict(indication)
+        kwargs = self.__dictToKwargs(indication)
+        return self.__meta.query.filter_by(**kwargs).first()
+
+    def __getNoneIndication(self, indication):
         return None
 
-    
+    def __createMusic(self, indication: __MetaIndication):
+        _id, _dict = indication.asJson()
+        music_cols = ['name', 'author', 'type1', 'type2', 'type3']
+        kwargs = {key: value for key, value in _dict.items() if key in music_cols}
         
+        try:
+            music = Music(**kwargs)
+            music.doSave()
+
+        except Exception as e:
+            return False
+    
+
+    # ---- Meta methods
+
+    def __doSave(self, indication: __MetaIndication) :
+        try:
+            indication.doSave()
+            return indication.id
+        except Exception as e:
+            return None
+    
+    def __doDelete(self, indication: __MetaIndication):
+        try:
+            indication.doDelete()
+            return True
+        except Exception as e:
+            return False
