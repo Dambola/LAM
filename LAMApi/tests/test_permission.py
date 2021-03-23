@@ -2,92 +2,79 @@ from lamapi.auth.model import User
 from lamapi.config import PermissionConfig
 from lamapi.permission.model import Permission
 
+from tests.config import User1
+
 import string
 import pytest
 import random
 
-LOGIN = None 
-PASSWORD = None
-EMAIL = None
-
-def generateRandomUser(size):
-    global LOGIN, PASSWORD, EMAIL
-
-    alphabet = string.ascii_lowercase
-
-    login = ''.join([alphabet[random.randint(0, len(alphabet) - 1)] \
-        for i in range(size)])
-    password = ''.join([alphabet[random.randint(0, len(alphabet) - 1)] \
-        for i in range(size)])
-    email = login + '@testing.com.br'
-    
-    LOGIN = login
-    PASSWORD = password
-    EMAIL = email
-
 class TestPermission(object):
-    PERMISSION_1 = PermissionConfig.ADD_MUSIC
-    PERMISSION_2 = PermissionConfig.DEL_MUSIC
-    PERMISSION_3 = PermissionConfig.EDT_MUSIC
+    @pytest.mark.run(order=2)
+    def testPermissionInsert1(self):
+        user = User1
+        perm = PermissionConfig.ADD_MUSIC
+        user_id = User.getUserId(user.login)
 
-    @pytest.mark.dependency()
-    def testUserCreation(self):
-        tries = 0
-        max_tries = 30
-        user_created = False
+        permission = Permission(permission=perm, user=user_id)
+        permission.doSave()
 
-        while not user_created:
-            generateRandomUser(30)
+        all_perms = Permission.getPermissions(user.login)
+        assert perm in all_perms
 
-            if not User.getUserId(LOGIN):
-                new_user = User(login=LOGIN, password=PASSWORD, email=EMAIL)
-                new_user.saveToDb()
-                user_created = True
-            
-            tries += 1
-        
-        assert new_user and user_created and tries <= max_tries
+    @pytest.mark.run(order=3)
+    def testPermissionInsert2(self):
+        user = User1
+        perm = PermissionConfig.DEL_MUSIC
+        user_id = User.getUserId(user.login)
 
-    @pytest.mark.dependency(depends=["TestPermission::testUserCreation"])
-    def testPermissionInsert(self):
-        user_id = User.getUserId(LOGIN)
+        permission = Permission(permission=perm, user=user_id)
+        permission.doSave()
 
-        perm_1 = Permission(permission=self.PERMISSION_1, user=user_id)
-        perm_1.saveToDb()
+        all_perms = Permission.getPermissions(user.login)
+        assert perm in all_perms
 
-        perm_2 = Permission(permission=self.PERMISSION_2, user=user_id)
-        perm_2.saveToDb()
+    @pytest.mark.run(order=4)
+    def testPermissionInsert3(self):
+        user = User1
 
-        perm_3 = Permission(permission=self.PERMISSION_3, user=user_id)
-        perm_3.saveToDb()
+        perm = PermissionConfig.EDT_MUSIC
+        user_id = User.getUserId(user.login)
 
-        all_perms = Permission.getPermissions(LOGIN)
-        assert self.PERMISSION_1 in all_perms and \
-            self.PERMISSION_2 in all_perms and \
-                self.PERMISSION_3 in all_perms
+        permission = Permission(permission=perm, user=user_id)
+        permission.doSave()
+
+        all_perms = Permission.getPermissions(user.login)
+        assert perm in all_perms
     
-    @pytest.mark.dependency(depends=["TestPermission::testPermissionInsert"])
-    def testPermissionSelect(self):
-        assert Permission.hasPermission(LOGIN, self.PERMISSION_1) and \
-            Permission.hasPermission(LOGIN, self.PERMISSION_2) and \
-                Permission.hasPermission(LOGIN, self.PERMISSION_3)
+    @pytest.mark.run(order=5)
+    def testHasPermission(self):
+        user = User1
 
-    @pytest.mark.dependency(depends=["TestPermission::testPermissionSelect"])
-    def testPermissionDelete(self):
-        user_id = User.getUserId(LOGIN)
+        perm_1 = PermissionConfig.ADD_MUSIC
+        perm_2 = PermissionConfig.DEL_MUSIC
+        perm_3 = PermissionConfig.EDT_MUSIC
+
+        assert Permission.hasPermission(user.login, perm_1) and \
+            Permission.hasPermission(user.login, perm_2) and \
+                Permission.hasPermission(user.login, perm_3)
+
+    @pytest.mark.run(order=10)
+    def testPermissionDeleteAll(self):
+        user = User1
+        user_id = User.getUserId(user.login)
+
+        perm_1 = PermissionConfig.ADD_MUSIC
+        perm_2 = PermissionConfig.DEL_MUSIC
+        perm_3 = PermissionConfig.EDT_MUSIC
         
-        perms = Permission.query.filter_by(user=user_id)
-        perms.delete()
+        Permission.deletePermission(None, perm_1, user_id=user_id)
+        Permission.deletePermission(None, perm_2, user_id=user_id)
+        Permission.deletePermission(None, perm_3, user_id=user_id)
 
-        assert not Permission.hasPermission(LOGIN, self.PERMISSION_1) and \
-            not Permission.hasPermission(LOGIN, self.PERMISSION_2) and \
-                not Permission.hasPermission(LOGIN, self.PERMISSION_3)
+        assert not Permission.hasPermission(user.login, perm_1) and \
+            not Permission.hasPermission(user.login, perm_2) and \
+                not Permission.hasPermission(user.login, perm_3)
 
-    @pytest.mark.dependency(depends=["TestPermission::testPermissionDelete"])
-    def testUserDelete(self):
-        user_id = User.getUserId(LOGIN)
-        User.query.filter_by(id=user_id).delete()
-        
-        assert User.getUserId(LOGIN) is None
+    
     
 
