@@ -1,0 +1,1 @@
+from lamapi.indication.model import *

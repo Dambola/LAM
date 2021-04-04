@@ -1,14 +1,15 @@
 from lamapi import db
-from lamapi.music.model import Music
-from lamapi.utils.db import DbBasicOperations
+from lamapi.music.model import MusicManager
+from lamapi.utils.db import DBInsert, DBDelete, DBUpdate
 from lamapi.utils.api import SingletonMeta
-from lamapi.indication.exception import NotValidIndication
+from lamapi.indication.constants import OrderBy, FilterBy
+from lamapi.indication.exception import *
 
-from sqlalchemy import or_, and_
+from sqlalchemy import or_
 
 class IndicationManager(metaclass=SingletonMeta):
 
-    class __MetaIndication(db.Model, DbBasicOperations):
+    class __MetaIndication(db.Model, DBInsert, DBDelete, DBUpdate):
         __tablename__ = 'indications'
 
         id = db.Column(db.Integer, primary_key = True, autoincrement = True)
@@ -21,8 +22,9 @@ class IndicationManager(metaclass=SingletonMeta):
         link = db.Column(db.String(150), nullable = True)
         db.UniqueConstraint(name, author)
 
-        def asJson(self):
-            return self.id, {
+        def asJSON(self):
+            return {
+                'id'     : self.id,
                 'name'   : self.name,
                 'author' : self.author,
                 'type1'  : self.type1,
@@ -31,132 +33,194 @@ class IndicationManager(metaclass=SingletonMeta):
                 'user'   : self.user,
                 'link'   : self.link,
             }
-    
     __meta = __MetaIndication
+
+    __filters_op = {
+        FilterBy.Key.Name: lambda self, x: self.__meta.name.in_(x),
+        FilterBy.Key.Author: lambda self, x: self.__meta.author.in_(x),
+        FilterBy.Key.User: lambda self, x: self.__meta.user.in_(x),
+        FilterBy.Key.Type: lambda self, x: or_(
+                self.__meta.type1.in_(x),
+                self.__meta.type2.in_(x),
+                self.__meta.type3.in_(x)
+            )
+    }
+
+    __orders_op = {
+        OrderBy.Id.Asc: lambda self: self.__meta.id.asc(),
+        OrderBy.Id.Desc: lambda self: self.__meta.id.desc(),
+        OrderBy.Name.Asc: lambda self: self.__meta.name.asc(),
+        OrderBy.Name.Desc: lambda self: self.__meta.name.desc(),
+        OrderBy.Author.Asc: lambda self: self.__meta.author.asc(),
+        OrderBy.Author.Desc: lambda self: self.__meta.author.desc(),
+        OrderBy.User.Asc: lambda self: self.__meta.user.asc(),
+        OrderBy.User.Desc: lambda self: self.__meta.user.desc(),
+    }
+
+
+    # ---- Public methods
     
-    def addIndication(self, indication):
-        self.__validateIndicationDict(indication)
-        kwargs = self.__dictToKwargs(indication)
-        meta_object = self.__meta(**kwargs)
-        return self.__doSave(meta_object)
+    def add(self, indication):
+        self.__validateJSON(indication)
+        json = self.__toJSON(indication)
+        object = self.__meta(**json)
+        return self.__doInsert(object)
     
-    def approveIndication(self, indication_id: int):
-        indication = self.getAnIndication(indication_id)
+    def edit(self, indication_id: int, indication: dict):
+        self.__validateJSON(indication)
+        json = self.__toJSON(indication)
+        object = self.__meta.query \
+            .filter_by(id=indication_id) \
+            .first()
+        return self.__doUpdate(object, indication)
 
-        if not indication:
-            return False
+    def approve(self, indication_id: int):
+        object = self.__meta.query \
+            .filter_by(id=indication_id) \
+                .first()
 
-        self.__createMusic(indication)
+        if not object:
+            return None, IndicationNotFound
 
-        meta_object = self.__meta.query.filter_by(id=indication_id).first()
-        return self.__doDelete(meta_object)
+        mgr = MusicManager()
+        json = object.asJSON()
+        music_id, error = mgr.add(json)
 
-    def refuseIndication(self, indication_id: int):
-        indication = self.getAnIndication(indication_id)
-
-        if not indication:
-            return False
+        if not music_id:
+            return None, error
         
-        meta_object = self.__meta.query.filter_by(id=indication_id).first()
-        return self.__doDelete(meta_object)
+        done, error = self.__doDelete(object)
+        if not done:
+            return music_id, IndicationNotDeleted
 
-    def getAllIndications(self, *args):
-        clauses = []
-        
-        for arg in args:
-            if not isinstance(arg, dict):
-                continue
-            
-            clause = []
+        return done, error
 
-            kwargs = self.__dictToKwargs(arg)
-                
-            if kwargs['name']: clause.append(self.__meta.name == kwargs['name'])
-            if kwargs['author']: clause.append(self.__meta.author == kwargs['author'])
-            if kwargs['type1']: clause.append(self.__meta.type1 == kwargs['type1'])
-            if kwargs['type2']: clause.append(self.__meta.type2 == kwargs['type2'])
-            if kwargs['type3']: clause.append(self.__meta.type3 == kwargs['type3'])
-            if kwargs['user']: clause.append(self.__meta.user == kwargs['user'])
-            if kwargs['link']: clause.append(self.__meta.link == kwargs['link'])
+    def delete(self, indication_id: int):
+        object = self.__meta.query \
+            .filter_by(id=indication_id) \
+                .first()
+        return self.__doDelete(object)
 
-            clauses.append(and_(*clause))
-        
-        return self.__meta.query.filter(or_(*clauses)).all()
 
-    def getAnIndication(self, indication):
-        operator = self.__getNoneIndication
-        if isinstance(indication, int):
-            operator = self.__getAnIndicationAsInt
-        elif isinstance(indication, dict):
-            operator = self.__getAnIndicationAsDict
-        return operator(indication)
+    # -------- Search methods
+
+    def searchByID(self, indication_id: int):
+        indication = self.__meta.query \
+            .filter_by(id=indication_id) \
+                .first()
+        if indication:
+            return indication.asJSON()
+        return None
     
+    def searchByName(self, name: str, author: str):
+        indication = self.__meta.query \
+            .filter_by(name=name, author=author) \
+                .first()
+        if indication:
+            return indication.asJSON()
+        return None
+    
+    def searchAll(self, filter_by: list = [], order_by: list = []) -> list:
+        filters = self.__get_filters(filter_by)
+        orders = self.__get_orders(order_by)
+        objects = self.__meta \
+            .query \
+            .filter(*filters) \
+            .order_by(*orders) \
+            .all()
+        
+        return [ obj.asJSON() for obj in objects ]
 
+    
     # ---- Internal methods
     
-    def __dictToKwargs(self, _dict):
+    def __toJSON(self, indication):
         return {
-            'name': _dict.get('name'),
-            'author': _dict.get('author'),
-            'type1': _dict.get('type1'),
-            'type2': _dict.get('type2'),
-            'type3': _dict.get('type3'),
-            'user': _dict.get('user'),
-            'link': _dict.get('link'),
+            'name': indication.get('name'),
+            'author': indication.get('author'),
+            'type1': indication.get('type1'),
+            'type2': indication.get('type2'),
+            'type3': indication.get('type3'),
+            'user': indication.get('user'),
+            'link': indication.get('link'),
         }
     
-    def __validateIndicationDict(self, _dict):
-        if not isinstance(_dict, dict):
-            raise NotValidIndication('Indication must be a dict type.')
+    def __validateJSON(self, indication):
+        if not isinstance(indication, dict):
+            raise NotValidIndicationJSONFormat
 
-        if 'name' not in _dict:
-            raise NotValidIndication('Name not found in indication.')
+        if 'name' not in indication:
+            raise NotValidIndicationJSONName
 
-        if 'author' not in _dict:
-            raise NotValidIndication('Author not found in indication.')
+        if 'author' not in indication:
+            raise NotValidIndicationJSONAuthor
 
-        if 'type1' not in _dict:
-            raise NotValidIndication('Type 1 not found in indication.')
+        if 'type1' not in indication:
+            raise NotValidIndicationJSONType1
 
-        if 'user' not in _dict:
-            raise NotValidIndication('User not found in indication.')
+        if 'type2' not in indication:
+            raise NotValidIndicationJSONType2
+
+        if 'type3' not in indication:
+            raise NotValidIndicationJSONType3
+
+        if 'user' not in indication:
+            raise NotValidIndicationJSONUser
+
+        if 'link' not in indication:
+            raise NotValidIndicationJSONUser
+ 
+    def __get_filters(self, filter_by: list):
+        filters = []
+
+        for f in filter_by:
+            key = f.get('key')
+            values = f.get('values')
+
+            if not key or not values:
+                continue
+            
+            operation = self.__filters_op.get(key, lambda self, _ : None)
+            constraint = operation(self, values)
+            
+            if constraint is not None:
+                filters.append(constraint)
         
-    def __getAnIndicationAsInt(self, indication: int):
-        return self.__meta.query.filter_by(id=indication).first()
+        return filters
+    
+    def __get_orders(self, order_by: list):
+        orders = []
 
-    def __getAnIndicationAsDict(self, indication: dict):
-        self.__validateIndicationDict(indication)
-        kwargs = self.__dictToKwargs(indication)
-        return self.__meta.query.filter_by(**kwargs).first()
-
-    def __getNoneIndication(self, indication):
-        return None
-
-    def __createMusic(self, indication: __MetaIndication):
-        _id, _dict = indication.asJson()
-        music_cols = ['name', 'author', 'type1', 'type2', 'type3']
-        kwargs = {key: value for key, value in _dict.items() if key in music_cols}
+        for o in order_by:
+            operation = self.__orders_op.get(o, lambda self: None)
+            constraint = operation(self)
+            
+            if constraint is not None:
+                orders.append(constraint)
         
-        try:
-            music = Music(**kwargs)
-            music.doSave()
+        return orders
 
+
+    # -------- Meta methods
+
+    def __doInsert(self, object: __MetaIndication):
+        try:
+            object.doInsert()
+            return object.id, None
         except Exception as e:
-            return False
+            return None, e
     
-
-    # ---- Meta methods
-
-    def __doSave(self, indication: __MetaIndication) :
+    def __doDelete(self, object: __MetaIndication):
         try:
-            indication.doSave()
-            return indication.id
+            object.doDelete()
+            return True, None
         except Exception as e:
-            return None
+            return False, e
     
-    def __doDelete(self, indication: __MetaIndication):
+    def __doUpdate(self, object: __MetaIndication, changes: dict):
         try:
-            indication.doDelete()
-            return True
+            object.doUpdate(changes)
+            return True, None
         except Exception as e:
-            return False
+            raise e
+            return False, e
