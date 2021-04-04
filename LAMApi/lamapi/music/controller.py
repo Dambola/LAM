@@ -3,9 +3,9 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from lamapi.config import PermissionConfig as PC
-from lamapi.music.model import Music
+from lamapi.music.model import MusicManager
 from lamapi.permission.model import Permission
-from lamapi.music.parser import MusicPostParser, MusicPutParser
+from lamapi.music.parser import *
 from lamapi import db
 
 from sqlalchemy.exc import IntegrityError
@@ -14,8 +14,6 @@ from sqlalchemy.exc import IntegrityError
 
 class MusicController(Resource):
     
-    # ---- TO-DO: Get Music
-    @jwt_required
     def get(self):
         """Get method for the Music Resource.
         It will return a result of Music Query.
@@ -25,11 +23,16 @@ class MusicController(Resource):
             int: The HTTP code. (optional) 
         """
 
-        # user = get_jwt_identity()
-        musics = Music.query.all()
+        mgr = MusicManager()
+        parser = MusicGetParser()
+
+        data = parser.getArgs()
+        musics = mgr.searchAll()
+
         if isinstance(musics, list):
-            return { 'musics' : dict([ music.asJson() for music in musics ]) }, 200 
-        return { 'message': 'Algum erro aconteceu.' }, 200
+            return { 'musics' : musics }
+
+        return { 'message': 'Algum erro aconteceu.' }, 500
     
     @jwt_required
     def put(self):
@@ -46,25 +49,20 @@ class MusicController(Resource):
         if not Permission.hasPermission(user, PC.ADD_MUSIC):
             return { 'message': 'You don\'t have permission for music creation.' }, 401
 
-        data = MusicPutParser.getArgs()
+        mgr = MusicManager()
+        parser = MusicPutParser()
 
-        name = data['name']
-        author = data['author']
-        type1 = data['type1']
-        type2 = data.get('type2')
-        type3 = data.get('type3')
+        data = parser.getArgs()
+        music_id, error = mgr.add(data)
+        
+        if music_id and not error:
+            return { 'id': music_id, 'message': f'Music was created.' }
 
-        new_user = Music(name=name, author=author, type1=type1, type2=type2, type3=type3)
-        try:
-            new_user.doSave()
-        except IntegrityError:
-            return { 'message': f'Music {name} - {author} was already created.' }, 200
-        except:
-            return { 'message': 'An error occoured.' }, 500
+        if error == IntegrityError:
+            return { 'message': f'Music was already created.' }, 500
             
-        return { 'message': f'Music {name} - {author} was created.' }
-
-    # ---- TO-DO: Update Music
+        return { 'message': 'An error occoured.' }, 500
+        
     @jwt_required
     def post(self):
         """Put method for the Music Resource.
@@ -80,26 +78,40 @@ class MusicController(Resource):
         if not Permission.hasPermission(user, PC.EDT_MUSIC):
             return { 'message': 'You don\'t have permission for music edition.' }, 401
 
-        data = MusicPostParser.getArgs()
+        mgr = MusicManager()
+        parser = MusicPostParser()
 
-        name   = data.get('name')
-        author = data.get('author')
-        type1  = data.get('type1')
+        data = parser.getArgs()
+        edited, error = mgr.edit(data['id'], data)
+
+        if edited and not error:
+            return { 'message': f'Music was edited.' }
         
-        type2  = data.get('type2')
-        type3  = data.get('type3')
+        return { 'message': 'An error occoured.' }, 500
 
-        new_user = Music(name=name, author=author, type1=type1, type2=type2, type3=type3)
-        try:
-            new_user.doSave()
-        except IntegrityError:
-            return { 'message': f'Music {name} - {author} was already created.' }, 200
-        except:
-            return { 'message': 'An error occoured.' }, 500
-        return { 'message': f'Music {name} - {author} was created.' }
-
-    # ---- TO-DO: Delete Music
     @jwt_required
     def delete(self):
-        return 'In progress (%s)...' % id
+        """Delete method for the Music Resource.
+        A music will be delete.
+
+        Returns:
+            dict: The json data.
+            int: The HTTP code. (optional) 
+        """
+
+        user = get_jwt_identity()
+        
+        if not Permission.hasPermission(user, PC.DEL_MUSIC):
+            return { 'message': 'You don\'t have permission for music deletion.' }, 401
+
+        mgr = MusicManager()
+        parser = MusicDeleteParser()
+
+        data = parser.getArgs()
+        deleted, error = mgr.remove(data['id'])
+        
+        if deleted and not error:
+            return { 'message': f'Music was deleted.' }
+            
+        return { 'message': 'An error occoured.' }, 500
         
