@@ -88,12 +88,16 @@
     methods: {
       ...mapActions('musics',['deleteMusic']),
       openEditMusic () {
-        this.$emit('openEditMusic',this.id);
+        this.$emit('openEditMusic', this.id);
       },
 
       deleteThisMusic () {
-        this.deleteMusic(this.id);
-        this.$emit('close');
+        this.deleteMusic(this.id).then(done => {
+          this.$emit('close');
+        }).catch(error => {
+          console.log(error);
+          this.$emit('openError', error.message);
+        });
       }
     },
     props: ['music','id','canEditMusic','canDeleteMusic']

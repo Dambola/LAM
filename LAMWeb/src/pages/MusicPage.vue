@@ -47,16 +47,40 @@
         :canEditMusic="canEditMusic()"
         :canDeleteMusic="canDeleteMusic()"
         @openEditMusic="openEditMusic"
+        @openError="openError"
         @close="showDetailMusic = false"
       />
     </q-dialog>
 
     <q-dialog v-model="showEditMusic" :full-width="true">
       <edit-music 
-        :music="getMusicInfo(clickedMusic)"
+        :music="getEditMusicInfo(clickedMusic)"
         :id="clickedMusicID"
+        @openError="openError"
         @close="showEditMusic = false"
       />
+    </q-dialog>
+
+    <q-dialog v-model="showError" :full-width="true">
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">
+            <q-icon 
+              name="warning" 
+              class="text-red"
+              style="font-size: 30px;" 
+            /> Error
+          </div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          {{ this.errorMessage }}
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
@@ -84,8 +108,12 @@
         showAddMusic: false,
         showDetailMusic: false,
         showEditMusic: false,
+        showError: false,
+
         clickedMusicID: -1,
-        clickedMusic: null
+        clickedMusic: null,
+
+        errorMessage: '',
       }
     },
     methods : {
@@ -95,6 +123,7 @@
         this.showAddMusic = false;
         this.showEditMusic = false;
         this.showDetailMusic = true;
+        this.showError = false;
       },
 
       openEditMusic (index) {
@@ -103,6 +132,17 @@
         this.showAddMusic = false;
         this.showDetailMusic = false;
         this.showEditMusic = true;
+        this.showError = false;
+      },
+
+      openError (error) {
+        this.clickedMusicID = -1;
+        this.clickedMusic = null;
+        this.showAddMusic = false;
+        this.showDetailMusic = false;
+        this.showEditMusic = false;
+        this.showError = true;
+        this.errorMessage = error;
       },
 
       getMusicInfo (music) {
@@ -113,6 +153,27 @@
           type1: this.types[music.type1] ? this.types[music.type1].name : null,
           type2: this.types[music.type2] ? this.types[music.type2].name : null,
           type3: this.types[music.type3] ? this.types[music.type3].name : null,
+        }
+      },
+
+      getEditMusicInfo (music) {
+        if (!music) return null;
+        console.log(music, this.type1);
+        return {
+          name: music.name,
+          author: music.author,
+          type1: { 
+            id: music.type1, 
+            name: this.types[music.type1] ? this.types[music.type1].name : null
+          },
+          type2: { 
+            id: music.type2, 
+            name: this.types[music.type2] ? this.types[music.type2].name : null
+          },
+          type3: { 
+            id: music.type3, 
+            name: this.types[music.type3] ? this.types[music.type3].name : null
+          },
         }
       },
 

@@ -11,7 +11,6 @@ const state = {
 // Contains not assynchronous -> Change state directly
 const mutations = {
   doLogin (state, payload) {
-    console.log('entrou aqui!');
     state.login = payload.login;
     state.email = payload.email;
   }
@@ -28,15 +27,12 @@ const actions = {
     try {
       const response = await lamapi.post('auth', params);
       const { data } = await response;
-      debugger;
-      console.log(data);
       commit('doLogin', { login: data.login, email: data.email });
       
     } catch (error) {  
       return false;
     }
 
-    debugger;
     return true;
   }
 };

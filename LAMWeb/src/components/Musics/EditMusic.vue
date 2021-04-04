@@ -32,7 +32,11 @@
         <div class="row">
           <q-select 
             v-model="musicToSubmit.type1" 
-            :options="types" 
+            :options="getTypesOptions()"
+            option-value="id"
+            option-label="name"
+            emit-value
+            map-options
             label="Tipo 1" 
             class="col"
           />
@@ -40,7 +44,11 @@
         <div class="row" v-if="musicToSubmit.type1">
           <q-select 
             v-model="musicToSubmit.type2" 
-            :options="types" 
+            :options="getTypesOptions()"
+            option-value="id"
+            option-label="name"
+            emit-value
+            map-options
             label="Tipo 2"
             class="col"
             clearable
@@ -49,7 +57,11 @@
         <div class="row" v-if="musicToSubmit.type2">
           <q-select 
             v-model="musicToSubmit.type3" 
-            :options="types" 
+            :options="getTypesOptions()"
+            option-value="id"
+            option-label="name"
+            emit-value
+            map-options
             label="Tipo 3" 
             class="col"
             clearable 
@@ -70,7 +82,7 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   
   export default {
     props : ['music','id'],
@@ -93,10 +105,33 @@
           this.submitMusic();
         }
       },
-
       submitMusic () {
-        this.updateMusic({ id: this.id, updates: this.musicToSubmit });
-        this.$emit('close');
+        const payload = { 
+          id: this.id, 
+          name: this.musicToSubmit.name,
+          author: this.musicToSubmit.author,
+          type1: this.musicToSubmit.type1 ? parseInt(this.musicToSubmit.type1) : null,
+          type2: this.musicToSubmit.type2 ? parseInt(this.musicToSubmit.type2) : null,
+          type3: this.musicToSubmit.type3 ? parseInt(this.musicToSubmit.type3) : null,
+        };
+
+        console.log(this.music.type1, this.music.type2, this.music.type3);
+
+        console.log(payload);
+
+        this.updateMusic(payload).then(done => {
+          this.$emit('close');
+        }).catch(error => {
+          console.log(error);
+          this.$emit('openError', error.message);
+        });
+      },
+      getTypesOptions () {
+        let options = [];
+        Object.keys(this.types).forEach((value, index) => {
+          options.push({ 'id': value, 'name': this.types[value].name })
+        });
+        return options;
       }
     }
   }

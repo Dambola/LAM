@@ -109,10 +109,15 @@
         }
       },
       submitMusic () {
-        this.musicToSubmit.type1 = this.musicToSubmit.type1 ? parseInt(this.musicToSubmit.type1) : null;
-        this.musicToSubmit.type2 = this.musicToSubmit.type2 ? parseInt(this.musicToSubmit.type2) : null;
-        this.musicToSubmit.type3 = this.musicToSubmit.type3 ? parseInt(this.musicToSubmit.type3) : null;
-        this.createMusic(this.musicToSubmit);
+        const music = {
+          name: this.musicToSubmit.name,
+          author: this.musicToSubmit.author,
+          type1: this.musicToSubmit.type1 ? parseInt(this.musicToSubmit.type1) : null,
+          type2: this.musicToSubmit.type2 ? parseInt(this.musicToSubmit.type2) : null,
+          type3: this.musicToSubmit.type3 ? parseInt(this.musicToSubmit.type3) : null,
+        };
+
+        this.createMusic(music);
         this.$emit('close');
       },
       getTypesOptions () {

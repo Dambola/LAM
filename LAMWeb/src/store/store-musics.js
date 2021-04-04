@@ -10,11 +10,13 @@ const state = {
 // Contains not assynchronous -> Change state directly
 const mutations = {
   reloadMusics (state, musics) {
-    state.musics = musics;
+    musics.forEach((music) => {
+      Vue.set(state.musics, music.id, music);
+    });
   },
   
   updateMusic (state, payload) {
-    Object.assign(state.musics[payload.id], payload.updates);
+    Object.assign(state.musics[payload.id], payload);
   },
 
   deleteMusic (state, id) { 
@@ -36,33 +38,43 @@ const actions = {
     });
   },
 
-  updateMusic ({ commit }, payload) {
-    commit('updateMusic', payload);
+  async updateMusic ({ commit }, payload) {
+    try {
+      const response = await lamapi.post('music', payload);
+      commit('updateMusic', payload);
+
+    } catch (error) {
+      const { response } = error;
+      const { data } = response;
+      throw new Error(data.message);
+    }
   },
 
-  deleteMusic ({ commit }, id) {
-    commit('deleteMusic', id);
+  async deleteMusic ({ commit }, id) {
+    try {
+      const response = await lamapi.delete('music', { data: { id: id } });
+      commit('deleteMusic', id);
+
+    } catch (error) {
+      const { response } = error;
+      const { data } = response;
+      throw new Error(data.message);
+    }
   },
   
-  createMusic ({ commit }, music) {
-    const params = {
-      name: music.name,
-      author: music.author,
-      type1: music.type1,
-      type2: music.type2,
-      type3: music.type3,
-    }
-
-    lamapi.put('music', params).then(response => {
-      if (response.data.id) {
-        let payload = {
-          id: response.data.id,
-          music: music
-        };
-
-        commit('createMusic', payload);
+  async createMusic ({ commit }, payload) {
+    try {
+      const response = await lamapi.put('music', payload);
+      const { data } = response;
+      if (data.id) {
+        commit('createMusic', { id: data.id, music: payload });
       }
-    });
+
+    } catch (error) {
+      const { response } = error;
+      const { data } = response;
+      throw new Error(data.message);
+    }      
   }
 };
 

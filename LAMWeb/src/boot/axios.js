@@ -10,7 +10,7 @@ import Router from '../router'
 const lamapi = axios.create({
   baseURL: process.env.API_URL,
   withCredentials: true,  
-})
+});
 
 lamapi.interceptors.response.use(
   (response) => {
@@ -29,7 +29,7 @@ lamapi.interceptors.response.use(
     }
     return Promise.reject(error)
   }
-)
+);
 
 // for use inside Vue files through this.$axios
 Vue.prototype.$axios = lamapi
