@@ -121,8 +121,8 @@ class IndicationManager(metaclass=SingletonMeta):
         return None
     
     def searchAll(self, filter_by: list = [], order_by: list = []) -> list:
-        filters = self.__get_filters(filter_by)
-        orders = self.__get_orders(order_by)
+        filters = self.__getFilters(filter_by)
+        orders = self.__getOrders(order_by)
         objects = self.__meta \
             .query \
             .filter(*filters) \
@@ -170,7 +170,7 @@ class IndicationManager(metaclass=SingletonMeta):
         if 'link' not in indication:
             raise NotValidIndicationJSONUser
  
-    def __get_filters(self, filter_by: list):
+    def __getFilters(self, filter_by: list):
         filters = []
 
         for f in filter_by:
@@ -188,7 +188,7 @@ class IndicationManager(metaclass=SingletonMeta):
         
         return filters
     
-    def __get_orders(self, order_by: list):
+    def __getOrders(self, order_by: list):
         orders = []
 
         for o in order_by:
