@@ -1,0 +1,1 @@
+from lamapi.auth.model import *

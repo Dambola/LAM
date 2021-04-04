@@ -1,0 +1,1 @@
+from lamapi.type.model import *

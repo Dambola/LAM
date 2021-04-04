@@ -1,0 +1,1 @@
+from lamapi.permission.model import *

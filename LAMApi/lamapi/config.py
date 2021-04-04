@@ -9,6 +9,9 @@ class LAMConfiguration(object):
     SESSION_COOKIE_SECURE = True
     ALGORITHM = 'HS256'
 
+class LAMTestConfiguration(LAMConfiguration):
+    SQLALCHEMY_DATABASE_URI = 'mysql://lamapi:ajZ88Xi2ojnxq9baEUhZDEqhaEPDxpJvkXcest6bkvEiH8fLnI@localhost/louvoragapemontese_test'
+
 class PermissionConfig(object):
     ADD_MUSIC = 0
     ADD_MUSIC_LABEL = "Adicionar Música"
