@@ -1,0 +1,5 @@
+class User1(object):
+    login = '65vReYjNH4Gr8xNXgEguqDz63jRrGuNDqTkuHeS3TahSxGFDXyHc3TTU3AVATz4ThYXBPFezF83PFjheGCgkmZQYbBqFL4bTDY75' 
+    password = 'zfDq5bg77Qz8NF2wEksB3fn2B9ZYkG4vMxJtyQqgwzeV56gA2kMTrYKSJmtTSmefuzyCfMJnXN8Sv24nbFRswtU5DXA8UrYdPpGF'
+    email = 'qYHrJESZG8wYajfvU9wJuzrpwxw7vZ9JBHZaXuLfc7QcfGxLGS7L48Zqvm7QW7aprZ9Y5KQ7HhazPhW7MEJFCzUJwCqhzqxA2waV'
+
