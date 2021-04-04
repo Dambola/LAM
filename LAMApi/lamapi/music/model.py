@@ -30,7 +30,7 @@ class MusicManager(metaclass=SingletonMeta):
             }
     __meta = __MetaMusic
    
-    __filters_op = {
+    _filtersOperation = {
         FilterBy.Key.Name: lambda self, x: self.__meta.name.in_(x),
         FilterBy.Key.Author: lambda self, x: self.__meta.author.in_(x),
         FilterBy.Key.Type: lambda self, x: or_(
@@ -40,7 +40,7 @@ class MusicManager(metaclass=SingletonMeta):
             )
     }
 
-    __orders_op = {
+    __ordersOperation = {
         OrderBy.Id.Asc: lambda self: self.__meta.id.asc(),
         OrderBy.Id.Desc: lambda self: self.__meta.id.desc(),
         OrderBy.Name.Asc: lambda self: self.__meta.name.asc(),
@@ -210,7 +210,7 @@ class MusicManager(metaclass=SingletonMeta):
             if not key or not values:
                 continue
             
-            operation = self.__filters_op.get(key, lambda self, _ : None)
+            operation = self._filtersOperation.get(key, lambda self, _ : None)
             constraint = operation(self, values)
             
             if constraint is not None:
@@ -222,7 +222,7 @@ class MusicManager(metaclass=SingletonMeta):
         orders = []
 
         for o in order_by:
-            operation = self.__orders_op.get(o, lambda self: None)
+            operation = self.__ordersOperation.get(o, lambda self: None)
             constraint = operation(self)
             
             if constraint is not None:
