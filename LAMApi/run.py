@@ -1,6 +1,5 @@
 from lamapi import createApplication
-
+app = createApplication('lamapi.config.LAMConfiguration')
 
 if __name__ == '__main__':
-    app = createApplication('lamapi.config.LAMConfiguration')
-    app.run(host='localhost', port=8390, debug=True)
+    app.run(port=8390)
