@@ -1,16 +1,16 @@
 # LAM
 ## Description
-This is a web application for Worship Bands to manage the songs and other things.
+This is a web application for Worship Bands to manage the songs and other things.<br>
 LAM means Louvor Agape Montese.
 
 ## Team
 This is a development of ProjectNogueira - Daniel Nogueira Rebouças
 
 ## Language
-Python 3.6
-Flask for web service and Flask-Restful-Api for api service.
-Quasar Framework
-Mysql 8.0
+Python 3.6<br>
+Flask for web service and Flask-Restful-Api for api service.<br>
+Quasar Framework<br>
+Mysql 8.0<br>
 Docker
 
 ## Main Features
@@ -51,6 +51,22 @@ To create a database service, we are using Docker.
 
 ```sh
 docker run -p 3306:3306 --name MysqlService -e MYSQL_ROOT_PASSWORD=<PASSWORD> -v <CONTAINER_PATH>:/var/lib/mysql -d mysql:8 mysqld --default-authentication-plugin=mysql_native_password
+```
+
+### LAM Web Application
+To create the Quasar Web Application service, we are using Docker.
+Build the image from LAMWeb\Dockerfile.
+
+```sh
+sudo docker build -t lam-web .
+sudo docker run -p 80:80 -d --name LamWebService lam-web
+```
+
+### LAM Rest API
+To create the Flask Rest API service, we are using Docker.
+
+```sh
+
 ```
 
 ## Running

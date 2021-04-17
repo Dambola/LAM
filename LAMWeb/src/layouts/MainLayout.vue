@@ -83,12 +83,12 @@ export default {
           icon: 'fas fa-home',
           link: '/'
         },
-        {
-          title: 'Indicação',
-          caption: 'Início',
-          icon: 'fas fa-plus-square',
-          link: '/indicacao'
-        },
+        // {
+        //   title: 'Indicação',
+        //   caption: 'Início',
+        //   icon: 'fas fa-plus-square',
+        //   link: '/indicacao'
+        // },
         {
           title: 'Música',
           caption: 'Lista de Músicas',

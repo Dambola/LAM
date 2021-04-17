@@ -1,0 +1,12 @@
+flask==1.1.2
+flask_restful==0.3.8
+flask_sqlalchemy==2.4.4
+flask_jwt_extended==3.25.0
+flask_cors==3.0.9
+pytest==6.2.2
+pytest-dependency==0.5.1
+pytest-ordering==0.6
+selenium==3.141.0
+pytest-selenium==2.0.1
+mysql
+pymysql
