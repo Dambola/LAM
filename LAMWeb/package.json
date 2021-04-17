@@ -13,7 +13,7 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "@websanova/vue-auth": "^3.2.3-beta",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "quasar": "^1.0.0",
     "vue-auth": "^1.0.0-alpha.1",
     "vue-axios": "^2.1.5",
