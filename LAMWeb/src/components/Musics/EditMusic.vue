@@ -97,6 +97,9 @@
         }
       }
     },
+    computed: {
+      ...mapGetters('types', ['types']),
+    },
     methods: {
       ...mapActions('musics',['updateMusic']),
       submitForm () {
@@ -105,24 +108,22 @@
           this.submitMusic();
         }
       },
+      convertIntOrNull(value) {
+        return value ? value : null;
+      },
       submitMusic () {
         const payload = { 
           id: this.id, 
           name: this.musicToSubmit.name,
           author: this.musicToSubmit.author,
-          type1: this.musicToSubmit.type1 ? parseInt(this.musicToSubmit.type1) : null,
-          type2: this.musicToSubmit.type2 ? parseInt(this.musicToSubmit.type2) : null,
-          type3: this.musicToSubmit.type3 ? parseInt(this.musicToSubmit.type3) : null,
+          type1: this.convertIntOrNull(this.musicToSubmit.type1.id),
+          type2: this.convertIntOrNull(this.musicToSubmit.type2.id),
+          type3: this.convertIntOrNull(this.musicToSubmit.type3.id),
         };
-
-        console.log(this.music.type1, this.music.type2, this.music.type3);
-
-        console.log(payload);
 
         this.updateMusic(payload).then(done => {
           this.$emit('close');
         }).catch(error => {
-          console.log(error);
           this.$emit('openError', error.message);
         });
       },

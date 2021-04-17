@@ -13,7 +13,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 class MusicController(Resource):
-    
+    @jwt_required
     def get(self):
         """Get method for the Music Resource.
         It will return a result of Music Query.

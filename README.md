@@ -11,6 +11,7 @@ Python 3.6
 Flask for web service and Flask-Restful-Api for api service.
 Quasar Framework
 Mysql 8.0
+Docker
 
 ## Main Features
 - Manage your bills through a web interface by adding information on expenses or earnings.
@@ -41,6 +42,15 @@ The footer is used to specify or alert something important. Soo the footer must 
 [optional-body]
 
 [optional-footer]
+```
+
+## Installation
+
+### Database
+To create a database service, we are using Docker.
+
+```sh
+docker run -p 3306:3306 --name MysqlService -e MYSQL_ROOT_PASSWORD=<PASSWORD> -v <CONTAINER_PATH>:/var/lib/mysql -d mysql:8 mysqld --default-authentication-plugin=mysql_native_password
 ```
 
 ## Running

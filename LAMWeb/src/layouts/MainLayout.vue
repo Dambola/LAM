@@ -95,24 +95,24 @@ export default {
           icon: 'fas fa-music',
           link: '/musica'
         },
-        {
-          title: 'Relatório',
-          caption: 'Lista de Músicas',
-          icon: 'fas fa-clipboard',
-          link: '/relatorio'
-        },
-        {
-          title: 'Admin',
-          caption: 'Página de Administração',
-          icon: 'fas fa-tools',
-          link: '/admin'
-        },
-        {
-          title: 'Perfil',
-          caption: 'Página de Administração',
-          icon: 'fas fa-user',
-          link: '/perfil'
-        },
+        // {
+        //   title: 'Relatório',
+        //   caption: 'Lista de Músicas',
+        //   icon: 'fas fa-clipboard',
+        //   link: '/relatorio'
+        // },
+        // {
+        //   title: 'Admin',
+        //   caption: 'Página de Administração',
+        //   icon: 'fas fa-tools',
+        //   link: '/admin'
+        // },
+        // {
+        //   title: 'Perfil',
+        //   caption: 'Página de Administração',
+        //   icon: 'fas fa-user',
+        //   link: '/perfil'
+        // },
       ]
     }
   }
