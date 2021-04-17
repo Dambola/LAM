@@ -2,7 +2,8 @@
 FROM python:3.8-alpine AS python-stage
 WORKDIR /lam-rest-api
 ADD lamapi /lam-rest-api
-RUN pip install -r requirements
+ADD REQUIREMENTS /lamapi
+RUN pip install -r REQUIREMENTS
 EXPOSE 8390
 CMD ["uwsgi", "run.ini"]
 
