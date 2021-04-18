@@ -1,5 +1,5 @@
 # STEP 1 BUILD QUASAR PROJECT
-FROM python:3.8-alpine AS python-stage
+FROM python:3.8-slim AS python-stage
 WORKDIR /lam-rest-api
 ADD . /lam-rest-api
 RUN pip install -r REQUIREMENTS
