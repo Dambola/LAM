@@ -9,4 +9,4 @@ CMD ["uwsgi", "run.ini"]
 # STEP 2 CREATE NGINX SERVER
 FROM nginx AS server-stage
 RUN rm /etc/nginx/conf.d/default.conf
-COPY --from=server-stage nginx.conf /etc/nginx/conf.d/
+COPY nginx.conf /etc/nginx/conf.d/
